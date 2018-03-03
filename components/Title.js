@@ -10,7 +10,7 @@ export default class Title extends React.Component {
       <View style={styles.container}>
         <Text style={styles.title}>Maniquest Questiny</Text>
 
-        <Link to="/new" style={styles.button} underlayColor={colors.slate}>
+        <Link to="/lobby" style={styles.button} underlayColor={colors.slate}>
           <Text style={styles.buttonText}>New Game</Text>
         </Link>
 
@@ -25,7 +25,7 @@ export default class Title extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,

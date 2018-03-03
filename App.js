@@ -9,6 +9,7 @@ import colors from './resources/colors.json';
 import Title from './components/Title';
 import NewGame from './components/NewGame';
 import JoinGame from './components/JoinGame';
+import Lobby from './components/Lobby';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -43,6 +44,7 @@ export default class App extends React.Component {
             <Route exact path="/" component={Title} />
             <Route path="/new" component={NewGame} />
             <Route path="/join" component={JoinGame} />
+            <Route path="/lobby" component={Lobby} />
           </View>
         )}
       </NativeRouter>
