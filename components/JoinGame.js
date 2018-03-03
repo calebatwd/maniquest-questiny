@@ -1,26 +1,23 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Link} from 'react-router-native';
 
 import colors from '../resources/colors.json';
 
-export default class Title extends React.Component {
+class JoinGame extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Maniquest Questiny</Text>
-
-        <Link to="/new" style={styles.button} underlayColor={colors.slate}>
-          <Text style={styles.buttonText}>New Game</Text>
+        <Link to="/" style={styles.button} underlayColor={colors.slate}>
+          <Text style={styles.buttonText}>Back</Text>
         </Link>
-
-        <Link to="/join" style={styles.button} underlayColor={colors.slate}>
-          <Text style={styles.buttonText}>Join Game</Text>
-        </Link>
+        <Text style={styles.title}>Join Game</Text>
       </View>
     );
   }
 }
+
+export default JoinGame;
 
 const styles = StyleSheet.create({
   container: {

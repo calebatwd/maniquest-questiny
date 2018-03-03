@@ -2,10 +2,13 @@ import React from 'react';
 import {Font} from 'expo';
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 import {NativeRouter, Route, Link} from 'react-router-native';
+import * as firebase from 'firebase';
+
+import colors from './resources/colors.json';
 
 import Title from './components/Title';
-
-import * as firebase from 'firebase';
+import NewGame from './components/NewGame';
+import JoinGame from './components/JoinGame';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -38,6 +41,8 @@ export default class App extends React.Component {
         {this.state.fontLoaded && (
           <View style={styles.container}>
             <Route exact path="/" component={Title} />
+            <Route path="/new" component={NewGame} />
+            <Route path="/join" component={JoinGame} />
           </View>
         )}
       </NativeRouter>
