@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import queryString from 'query-string';
 import React, {Component} from 'react';
 import {Link} from 'react-router-native';
@@ -8,13 +9,39 @@ import colors from '../resources/colors.json';
 class ChooseName extends Component {
   state = {playerName: ''};
 
+  constructor(props) {
+    super(props);
+
+    const {from, gameId} = queryString.parse(props.location.search);
+    this.from = from;
+    this.gameId = gameId;
+  }
+
+  addPlayer() {
+    const {playerName} = this.state;
+
+    // if (playerName === '') {
+    // TODO: display an error if the player name is empty or invalid
+    // }
+
+    firebase
+      .database()
+      .ref(`games/${this.gameId}/players`)
+      .push({
+        name: playerName.trim(),
+        avatar: 'spaceman',
+      })
+      .catch((error) => {
+        console.log(`Error creating new game with ID "${error}":`, error);
+      });
+  }
+
   render() {
-    const {from, gameId} = queryString.parse(this.props.location.search);
-    const backButtonLinkText = from === 'new' ? 'New Game' : 'Join Game';
+    const backButtonLinkText = this.from === 'new' ? 'New Game' : 'Join Game';
 
     return (
       <View style={styles.container}>
-        <Link to={`/${from}`} underlayColor={colors.slate}>
+        <Link to={`/${this.from}`} underlayColor={colors.slate}>
           <Text style={styles.backButtonText}>&lt; {backButtonLinkText}</Text>
         </Link>
         <ScrollView contentContainerStyle={styles.innerContainer}>
@@ -28,7 +55,12 @@ class ChooseName extends Component {
             placeholderTextColor={colors.lightGray}
             onChangeText={(playerName) => this.setState({playerName})}
           />
-          <Link to={`/lobby/${gameId}`} style={styles.launchButton} underlayColor={colors.slate}>
+          <Link
+            to={`/lobby/${this.gameId}`}
+            onPress={() => this.addPlayer()}
+            style={styles.launchButton}
+            underlayColor={colors.slate}
+          >
             <Text style={styles.launchButtonText}>Launch!</Text>
           </Link>
         </ScrollView>
