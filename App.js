@@ -10,7 +10,6 @@ import Lobby from './components/Lobby';
 import Title from './components/Title';
 import NewGame from './components/NewGame';
 import JoinGame from './components/JoinGame';
-import Lobby from './components/Lobby';
 import Game from './components/Game';
 import ChooseName from './components/ChooseName';
 
