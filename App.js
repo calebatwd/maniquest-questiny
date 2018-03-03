@@ -1,13 +1,29 @@
 import React from 'react';
+import {Font} from 'expo';
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 
 import colors from './resources/colors.json';
 
 export default class App extends React.Component {
+  state = {
+    fontLoaded: false,
+  };
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      SpaceMono: require('./resources/fonts/SpaceMono-Regular.ttf'),
+      SpaceMonoBold: require('./resources/fonts/SpaceMono-Bold.ttf'),
+      SpaceMonoItalic: require('./resources/fonts/SpaceMono-Italic.ttf'),
+      SpaceMonoBoldItalic: require('./resources/fonts/SpaceMono-BoldItalic.ttf'),
+    });
+
+    this.setState({fontLoaded: true});
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Maniquest Questiny</Text>
+        {this.state.fontLoaded && <Text style={styles.title}>Maniquest Questiny</Text>}
 
         <TouchableHighlight
           style={styles.button}
@@ -55,9 +71,9 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   title: {
-    fontSize: 48,
+    fontSize: 44,
+    fontFamily: 'SpaceMonoBold',
     marginBottom: 40,
-    fontWeight: 'bold',
     textAlign: 'center',
     color: colors.purple,
   },
