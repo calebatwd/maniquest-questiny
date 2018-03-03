@@ -1,11 +1,33 @@
+import firebase from 'firebase';
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 import {Link} from 'react-router-native';
+import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 
 import colors from '../resources/colors.json';
 
 class NewGame extends Component {
   state = {gameId: ''};
+
+  createGame() {
+    const {gameId} = this.state;
+
+    // if (gameId === '') {
+    // TODO: display an error if the game ID is empty or invalid
+    // }
+
+    console.log('Creating ', gameId);
+
+    firebase
+      .database()
+      .ref(`games/${gameId}/exists`)
+      .set(true)
+      .then(() => {
+        console.log('SUCCESS!');
+      })
+      .catch((error) => {
+        console.log(`Error creating new game with ID "${error}":`, error);
+      });
+  }
 
   render() {
     return (
@@ -28,6 +50,7 @@ class NewGame extends Component {
             to={`/name?from=${this.props.match.path.slice(1)}&gameId=${this.state.gameId}`}
             style={styles.newButton}
             underlayColor={colors.slate}
+            onPress={() => this.createGame()}
           >
             <Text style={styles.newButtonText}>Create Game</Text>
           </Link>
