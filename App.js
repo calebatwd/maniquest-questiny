@@ -1,7 +1,10 @@
 import React from 'react';
+import thunk from 'redux-thunk';
 import {Font} from 'expo';
-import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
+import {Provider} from 'react-redux';
 import {NativeRouter, Route, Link} from 'react-router-native';
+import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
+import {combineReducers, compose, createStore, applyMiddleware} from 'redux';
 import * as firebase from 'firebase';
 
 import colors from './resources/colors.json';
@@ -20,7 +23,20 @@ const firebaseConfig = {
   databaseURL: 'https://maniquest-questiny.firebaseio.com/',
   storageBucket: '<your-storage-bucket>',
 };
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+
+// Reducers
+import rootReducers from './reducers.js';
+
+// Middleware
+const middleware = [thunk];
+if (process.env.NODE_ENV !== 'production') {
+  const {logger} = require('redux-logger');
+  middleware.push(logger);
+}
+
+// Create the Redux store
+const store = createStore(combineReducers({...rootReducers}), applyMiddleware(...middleware));
 
 export default class App extends React.Component {
   state = {
@@ -40,18 +56,20 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <NativeRouter>
-        {this.state.fontLoaded && (
-          <View style={styles.container}>
-            <Route exact path="/" component={Title} />
-            <Route path="/new" component={NewGame} />
-            <Route path="/join" component={JoinGame} />
-            <Route path="/name" component={ChooseName} />
-            <Route path="/lobby/:gameId" component={Lobby} />
-            <Route path="/game" component={Game} />
-          </View>
-        )}
-      </NativeRouter>
+      <Provider store={store}>
+        <NativeRouter>
+          {this.state.fontLoaded && (
+            <View style={styles.container}>
+              <Route exact path="/" component={Title} />
+              <Route path="/new" component={NewGame} />
+              <Route path="/join" component={JoinGame} />
+              <Route path="/name" component={ChooseName} />
+              <Route path="/lobby/:gameId" component={Lobby} />
+              <Route path="/game" component={Game} />
+            </View>
+          )}
+        </NativeRouter>
+      </Provider>
     );
   }
 }
