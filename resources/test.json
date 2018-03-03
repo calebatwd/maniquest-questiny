@@ -1,0 +1,16 @@
+{
+  "games": {
+    "BEEF": {
+      "players": {
+        "223234": {
+          "name": "Caleb",
+          "avatar": "spaceman"
+        },
+        "223235": {
+          "name": "Jake",
+          "avatar": "spaceman"
+        }
+      }
+    }
+  }
+}
