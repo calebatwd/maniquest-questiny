@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import firebase from 'firebase';
 import React, {Component} from 'react';
 import {Link} from 'react-router-native';
@@ -15,10 +16,28 @@ class NewGame extends Component {
     // TODO: display an error if the game ID is empty or invalid
     // }
 
+    const initialGameState = {
+      deck: [],
+      progress: {
+        hintsRemaining: 8,
+        crashesRemaining: 3,
+      },
+    };
+    const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
+    const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
+    planets.forEach((planet) => {
+      _.set(initialGameState, `progress.scores.${planet}`, 0);
+      ranks.forEach((rank) => {
+        initialGameState.deck.push(`${planet}_${rank}`);
+      });
+    });
+
+    initialGameState.deck = _.shuffle(initialGameState.deck);
+
     firebase
       .database()
-      .ref(`games/${gameId}/exists`)
-      .set(true)
+      .ref(`games/${gameId}`)
+      .set(initialGameState)
       .catch((error) => {
         console.log(`Error creating new game with ID "${error}":`, error);
       });
