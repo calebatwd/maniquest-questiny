@@ -10,13 +10,22 @@ import spaceman from '../resources/img/spaceman.png';
 class Lobby extends Component {
   componentWillMount() {
     this.gameId = this.props.match.params.gameId;
+    this.gameId = 'BEEF';
 
-    this.players = [{key: 'Caleb'}, {key: 'Jake'}];
+    this.players = [];
 
     const playersRef = firebase.database().ref(`games/${this.gameId}/players`);
-    playersRef.on('child_added', function(player) {
-      this.players.push({key: player.name});
-    });
+    playersRef.on(
+      'child_added',
+      (snap) => {
+        const name = snap.val().name;
+        console.log('Player added ' + name);
+        this.players.push({key: name});
+      },
+      (error) => {
+        console.log('Failed to fetch players. ' + error);
+      }
+    );
   }
 
   render() {
@@ -33,7 +42,7 @@ class Lobby extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Lobby</Text>
-        <Text style={styles.subtitle}>Room: test</Text>
+        <Text style={styles.subtitle}>Room: {this.gameId}</Text>
         <View>{playerList}</View>
         <Link to="/" style={styles.button} underlayColor={colors.slate}>
           <Text style={styles.buttonText}>Start</Text>

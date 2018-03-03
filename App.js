@@ -10,6 +10,7 @@ import Lobby from './components/Lobby';
 import Title from './components/Title';
 import NewGame from './components/NewGame';
 import JoinGame from './components/JoinGame';
+import Game from './components/Game';
 import ChooseName from './components/ChooseName';
 
 // Initialize Firebase
@@ -47,6 +48,7 @@ export default class App extends React.Component {
             <Route path="/join" component={JoinGame} />
             <Route path="/name" component={ChooseName} />
             <Route path="/lobby" component={Lobby} />
+            <Route path="/game" component={Game} />
           </View>
         )}
       </NativeRouter>
