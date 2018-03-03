@@ -10,7 +10,7 @@ export default class Title extends React.Component {
       <View style={styles.container}>
         <Text style={styles.title}>Maniquest Questiny</Text>
 
-        <Link to="/lobby" style={styles.button} underlayColor={colors.slate}>
+        <Link to="/new" style={styles.button} underlayColor={colors.slate}>
           <Text style={styles.buttonText}>New Game</Text>
         </Link>
 

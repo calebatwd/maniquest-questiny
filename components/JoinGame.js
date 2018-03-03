@@ -5,13 +5,32 @@ import {Link} from 'react-router-native';
 import colors from '../resources/colors.json';
 
 class JoinGame extends Component {
+  state = {gameId: ''};
   render() {
     return (
       <View style={styles.container}>
         <Link to="/" style={styles.button} underlayColor={colors.slate}>
           <Text style={styles.buttonText}>Back</Text>
         </Link>
-        <Text style={styles.title}>Join Game</Text>
+        <ScrollView contentContainerStyle={styles.innerContainer}>
+          <Text style={styles.title}>What game would you like to join?</Text>
+          <TextInput
+            style={styles.input}
+            returnKeyType="done"
+            autoCapitalize="none"
+            selectTextOnFocus={true}
+            placeholder="e.g. mars-rover"
+            placeholderTextColor={colors.lightGray}
+            onChangeText={(gameId) => this.setState({gameId: gameId.trim()})}
+          />
+          <Link
+            to={`/name?from=${this.props.match.path.slice(1)}&gameId=${this.state.gameId}`}
+            style={styles.joinButton}
+            underlayColor={colors.slate}
+          >
+            <Text style={styles.joinButtonText}>Join Game</Text>
+          </Link>
+        </ScrollView>
       </View>
     );
   }
