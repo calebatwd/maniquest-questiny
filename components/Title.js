@@ -25,10 +25,8 @@ export default class Title extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
   },
   button: {
     alignItems: 'center',
@@ -41,7 +39,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    color: '#FFF',
+    color: colors.white,
   },
   title: {
     fontSize: 44,
