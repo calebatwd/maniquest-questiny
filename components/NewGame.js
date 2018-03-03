@@ -5,7 +5,7 @@ import {Link} from 'react-router-native';
 import colors from '../resources/colors.json';
 
 class NewGame extends Component {
-  state = {text: ''};
+  state = {gameId: ''};
 
   render() {
     return (
@@ -21,11 +21,15 @@ class NewGame extends Component {
             autoCapitalize="none"
             selectTextOnFocus={true}
             placeholder="e.g. mars-rover"
-            placeholderTextColor="#DCDCDC"
-            onChangeText={(text) => this.setState({text})}
+            placeholderTextColor={colors.lightGray}
+            onChangeText={(gameId) => this.setState({gameId: gameId.trim()})}
           />
-          <Link to="/name" style={styles.newButton} underlayColor={colors.slate}>
-            <Text style={styles.newButtonText}>Create</Text>
+          <Link
+            to={`/name?from=${this.props.match.path.slice(1)}&gameId=${this.state.gameId}`}
+            style={styles.newButton}
+            underlayColor={colors.slate}
+          >
+            <Text style={styles.newButtonText}>Create Game</Text>
           </Link>
         </ScrollView>
       </View>

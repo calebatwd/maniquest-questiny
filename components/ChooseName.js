@@ -1,35 +1,35 @@
+import queryString from 'query-string';
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 import {Link} from 'react-router-native';
+import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 
 import colors from '../resources/colors.json';
 
-class JoinGame extends Component {
-  state = {gameId: ''};
+class ChooseName extends Component {
+  state = {playerName: ''};
 
   render() {
+    const {from, gameId} = queryString.parse(this.props.location.search);
+    const backButtonLinkText = from === 'new' ? 'New Game' : 'Join Game';
+
     return (
       <View style={styles.container}>
-        <Link to="/" underlayColor={colors.slate}>
-          <Text style={styles.backButtonText}>&lt; Home</Text>
+        <Link to={`/${from}`} underlayColor={colors.slate}>
+          <Text style={styles.backButtonText}>&lt; {backButtonLinkText}</Text>
         </Link>
         <ScrollView contentContainerStyle={styles.innerContainer}>
-          <Text style={styles.title}>What game would you like to join?</Text>
+          <Text style={styles.title}>What is your name?</Text>
           <TextInput
             style={styles.input}
             returnKeyType="done"
             autoCapitalize="none"
             selectTextOnFocus={true}
-            placeholder="e.g. mars-rover"
+            placeholder="e.g. Lunar Larry"
             placeholderTextColor={colors.lightGray}
-            onChangeText={(gameId) => this.setState({gameId: gameId.trim()})}
+            onChangeText={(playerName) => this.setState({playerName})}
           />
-          <Link
-            to={`/name?from=${this.props.match.path.slice(1)}&gameId=${this.state.gameId}`}
-            style={styles.joinButton}
-            underlayColor={colors.slate}
-          >
-            <Text style={styles.joinButtonText}>Join Game</Text>
+          <Link to={`/lobby/${gameId}`} style={styles.launchButton} underlayColor={colors.slate}>
+            <Text style={styles.launchButtonText}>Launch!</Text>
           </Link>
         </ScrollView>
       </View>
@@ -37,7 +37,7 @@ class JoinGame extends Component {
   }
 }
 
-export default JoinGame;
+export default ChooseName;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
   },
-  joinButton: {
+  launchButton: {
     alignItems: 'center',
     backgroundColor: colors.orange,
     padding: 10,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
   },
-  joinButtonText: {
+  launchButtonText: {
     fontSize: 20,
     color: colors.white,
   },
