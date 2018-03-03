@@ -47,7 +47,7 @@ export default class App extends React.Component {
             <Route path="/new" component={NewGame} />
             <Route path="/join" component={JoinGame} />
             <Route path="/name" component={ChooseName} />
-            <Route path="/lobby" component={Lobby} />
+            <Route path="/lobby/:gameId" component={Lobby} />
             <Route path="/game" component={Game} />
           </View>
         )}

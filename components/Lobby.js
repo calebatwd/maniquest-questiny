@@ -10,7 +10,7 @@ import spaceman from '../resources/img/spaceman.png';
 class Lobby extends Component {
   componentWillMount() {
     this.gameId = this.props.match.params.gameId;
-    this.gameId = 'BEEF';
+    console.log(`Lobby loading for gameId ${this.gameId}`);
 
     this.players = [];
 
@@ -41,12 +41,17 @@ class Lobby extends Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Lobby</Text>
-        <Text style={styles.subtitle}>Room: {this.gameId}</Text>
-        <View>{playerList}</View>
-        <Link to="/" style={styles.button} underlayColor={colors.slate}>
-          <Text style={styles.buttonText}>Start</Text>
+        <Link to="/" underlayColor={colors.slate}>
+          <Text style={styles.backButtonText}>&lt; Home</Text>
         </Link>
+        <View style={styles.innerContainer}>
+          <Text style={styles.title}>Lobby</Text>
+          <Text style={styles.subtitle}>Room: {this.gameId}</Text>
+          <View>{playerList}</View>
+          <Link to="/" style={styles.button} underlayColor={colors.slate}>
+            <Text style={styles.buttonText}>Start</Text>
+          </Link>
+        </View>
       </View>
     );
   }
@@ -57,10 +62,16 @@ export default Lobby;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+  },
+  backButtonText: {
+    marginTop: 10,
+    fontSize: 24,
+    color: colors.orange,
+  },
+  innerContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
   },
   button: {
     alignItems: 'center',
@@ -91,18 +102,16 @@ const styles = StyleSheet.create({
   },
   slot: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 12,
   },
   avatar: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     marginRight: 20,
   },
   playerName: {
     fontFamily: 'SpaceMonoBold',
-    width: 150,
     fontSize: 32,
   },
 });

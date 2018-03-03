@@ -9,6 +9,9 @@ class Game extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View>
+          <Text>Top</Text>
+        </View>
         <Text style={styles.title}>Game</Text>
       </View>
     );
