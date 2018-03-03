@@ -1,6 +1,7 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
 import {Link} from 'react-router-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 
 import * as firebase from 'firebase';
 
@@ -17,17 +18,14 @@ class Lobby extends Component {
 
     const playersRef = firebase.database().ref(`games/${this.gameId}/players`);
     playersRef.on(
-      'child_added',
+      'value',
       (snap) => {
-        const name = snap.val().name;
-        this.setState((prevState) => {
-          return {
-            players: [...prevState.players, {key: name}],
-          };
-        });
+        this.setState((prevState) => ({
+          players: _.values(snap.val()),
+        }));
       },
       (error) => {
-        console.log('Failed to fetch players. ' + error);
+        console.log('Failed to fetch players:' + error);
       }
     );
   }
@@ -40,7 +38,7 @@ class Lobby extends Component {
       playerList.push(
         <View style={styles.slot} key={i}>
           <Image style={styles.avatar} source={spaceman} />
-          <Text style={styles.playerName}>{players[i] ? players[i].key : '...'}</Text>
+          <Text style={styles.playerName}>{players[i] ? players[i].name : '...'}</Text>
         </View>
       );
     }
