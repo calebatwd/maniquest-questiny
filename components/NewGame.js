@@ -15,15 +15,10 @@ class NewGame extends Component {
     // TODO: display an error if the game ID is empty or invalid
     // }
 
-    console.log('Creating ', gameId);
-
     firebase
       .database()
       .ref(`games/${gameId}/exists`)
       .set(true)
-      .then(() => {
-        console.log('SUCCESS!');
-      })
       .catch((error) => {
         console.log(`Error creating new game with ID "${error}":`, error);
       });
