@@ -1,5 +1,4 @@
 import React from 'react';
-import 
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 
 import colors from './resources/colors.json';
