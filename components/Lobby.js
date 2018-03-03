@@ -18,8 +18,9 @@ class Lobby extends Component {
     playersRef.on(
       'child_added',
       (snap) => {
-        console.log(this.players);
-        this.players.push({key: snap.val().name});
+        const name = snap.val().name;
+        console.log('Player added ' + name);
+        this.players.push({key: name});
       },
       (error) => {
         console.log('Failed to fetch players. ' + error);
