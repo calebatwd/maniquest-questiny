@@ -1,8 +1,9 @@
 import firebase from 'firebase';
 import queryString from 'query-string';
 import React, {Component} from 'react';
+import {withRouter} from 'react-router';
 import {Link} from 'react-router-native';
-import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight} from 'react-native';
 
 import colors from '../resources/colors.json';
 
@@ -18,22 +19,30 @@ class ChooseName extends Component {
   }
 
   addPlayer() {
+    const {history} = this.props;
     const {playerName} = this.state;
 
-    // if (playerName === '') {
-    // TODO: display an error if the player name is empty or invalid
-    // }
-
-    firebase
-      .database()
-      .ref(`games/${this.gameId}/players`)
-      .push({
-        name: playerName.trim(),
-        avatar: 'spaceman',
-      })
-      .catch((error) => {
-        console.log(`Error creating new game with ID "${error}":`, error);
-      });
+    if (playerName === '') {
+      // TODO: display an error if the player name is empty or invalid
+      console.log('No player name provided on choose name screen...');
+    } else {
+      firebase
+        .database()
+        .ref(`games/${this.gameId}/players`)
+        .push({
+          name: playerName.trim(),
+          avatar: 'spaceman',
+        })
+        .then((snapshot) => {
+          history.push({
+            pathname: `/lobby/${this.gameId}`,
+            search: `?playerId=${snapshot.key}}`,
+          });
+        })
+        .catch((error) => {
+          console.log(`Error creating new game with ID "${error}":`, error);
+        });
+    }
   }
 
   render() {
@@ -55,21 +64,20 @@ class ChooseName extends Component {
             placeholderTextColor={colors.lightGray}
             onChangeText={(playerName) => this.setState({playerName})}
           />
-          <Link
-            to={`/lobby/${this.gameId}`}
+          <TouchableHighlight
             onPress={() => this.addPlayer()}
             style={styles.launchButton}
             underlayColor={colors.slate}
           >
             <Text style={styles.launchButtonText}>Launch!</Text>
-          </Link>
+          </TouchableHighlight>
         </ScrollView>
       </View>
     );
   }
 }
 
-export default ChooseName;
+export default withRouter(ChooseName);
 
 const styles = StyleSheet.create({
   container: {

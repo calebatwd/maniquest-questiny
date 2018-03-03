@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import firebase from 'firebase';
 import React, {Component} from 'react';
+import {withRouter} from 'react-router';
 import {Link} from 'react-router-native';
-import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight} from 'react-native';
 
 import colors from '../resources/colors.json';
 
@@ -11,36 +12,44 @@ class NewGame extends Component {
 
   createGame() {
     const {gameId} = this.state;
+    const {history} = this.props;
 
-    // if (gameId === '') {
-    // TODO: display an error if the game ID is empty or invalid
-    // }
-
-    const initialGameState = {
-      deck: [],
-      progress: {
-        hintsRemaining: 8,
-        crashesRemaining: 3,
-      },
-    };
-    const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
-    const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
-    planets.forEach((planet) => {
-      _.set(initialGameState, `progress.scores.${planet}`, 0);
-      ranks.forEach((rank) => {
-        initialGameState.deck.push(`${planet}_${rank}`);
+    if (gameId === '') {
+      // TODO: display an error if the game ID is empty or invalid
+      console.log('No game ID provided on new game screen...');
+    } else {
+      const initialGameState = {
+        deck: [],
+        progress: {
+          hintsRemaining: 8,
+          crashesRemaining: 3,
+        },
+      };
+      const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
+      const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
+      planets.forEach((planet) => {
+        _.set(initialGameState, `progress.scores.${planet}`, 0);
+        ranks.forEach((rank) => {
+          initialGameState.deck.push(`${planet}_${rank}`);
+        });
       });
-    });
 
-    initialGameState.deck = _.shuffle(initialGameState.deck);
+      initialGameState.deck = _.shuffle(initialGameState.deck);
 
-    firebase
-      .database()
-      .ref(`games/${gameId}`)
-      .set(initialGameState)
-      .catch((error) => {
-        console.log(`Error creating new game with ID "${error}":`, error);
-      });
+      firebase
+        .database()
+        .ref(`games/${gameId}`)
+        .set(initialGameState)
+        .then(() => {
+          history.push({
+            pathname: '/name',
+            search: `?from=${this.props.match.path.slice(1)}&gameId=${gameId}`,
+          });
+        })
+        .catch((error) => {
+          console.log(`Error creating new game with ID "${error}":`, error);
+        });
+    }
   }
 
   render() {
@@ -60,21 +69,20 @@ class NewGame extends Component {
             placeholderTextColor={colors.lightGray}
             onChangeText={(gameId) => this.setState({gameId: gameId.trim()})}
           />
-          <Link
-            to={`/name?from=${this.props.match.path.slice(1)}&gameId=${this.state.gameId}`}
+          <TouchableHighlight
             style={styles.newButton}
             underlayColor={colors.slate}
             onPress={() => this.createGame()}
           >
             <Text style={styles.newButtonText}>Create Game</Text>
-          </Link>
+          </TouchableHighlight>
         </ScrollView>
       </View>
     );
   }
 }
 
-export default NewGame;
+export default withRouter(NewGame);
 
 const styles = StyleSheet.create({
   container: {

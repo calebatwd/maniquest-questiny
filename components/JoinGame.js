@@ -1,11 +1,29 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
+import {withRouter} from 'react-router';
 import {Link} from 'react-router-native';
+import {StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight} from 'react-native';
 
 import colors from '../resources/colors.json';
 
 class JoinGame extends Component {
   state = {gameId: ''};
+
+  joinGame() {
+    const {gameId} = this.state;
+    const {history} = this.props;
+
+    // TODO: verify the game ID exists in Firebase
+
+    if (gameId === '') {
+      // TODO: display an error if the game ID is empty or invalid
+      console.log('No game ID provided on join game screen...');
+    } else {
+      history.push({
+        pathname: '/name',
+        search: `?from=${this.props.match.path.slice(1)}&gameId=${gameId}`,
+      });
+    }
+  }
 
   render() {
     return (
@@ -24,20 +42,20 @@ class JoinGame extends Component {
             placeholderTextColor={colors.lightGray}
             onChangeText={(gameId) => this.setState({gameId: gameId.trim()})}
           />
-          <Link
-            to={`/name?from=${this.props.match.path.slice(1)}&gameId=${this.state.gameId}`}
+          <TouchableHighlight
             style={styles.joinButton}
+            onPress={() => this.joinGame()}
             underlayColor={colors.slate}
           >
             <Text style={styles.joinButtonText}>Join Game</Text>
-          </Link>
+          </TouchableHighlight>
         </ScrollView>
       </View>
     );
   }
 }
 
-export default JoinGame;
+export default withRouter(JoinGame);
 
 const styles = StyleSheet.create({
   container: {
