@@ -1,7 +1,18 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 
+import * as firebase from 'firebase';
+
 import colors from './resources/colors.json';
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: 'AIzaSyBFHOr5LKNirHqMyWTvpml0MZxVH3-lYD8',
+  authDomain: 'maniquest-questiny.firebaseapp.com',
+  databaseURL: 'https://maniquest-questiny.firebaseio.com/',
+  storageBucket: '<your-storage-bucket>',
+};
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 export default class App extends React.Component {
   render() {
