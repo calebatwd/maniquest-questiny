@@ -1,13 +1,29 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+        <Text style={styles.title}>Maniquest Questiny</Text>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => {
+            console.log('New game pressed');
+          }}
+          color="#841584"
+        >
+          <Text>New Game</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => {
+            console.log('Join game pressed');
+          }}
+          color="#841584"
+        >
+          <Text>Join Game</Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -19,5 +35,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+    margin: 10,
+    width: 200,
+    height: 60,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 32,
+    marginBottom: 60,
   },
 });
