@@ -10,7 +10,7 @@ class JoinGame extends Component {
 
   joinGame() {
     const {gameId} = this.state;
-    const {history} = this.props;
+    const {history, setGameId} = this.props;
 
     // TODO: verify the game ID exists in Firebase
 
@@ -18,6 +18,8 @@ class JoinGame extends Component {
       // TODO: display an error if the game ID is empty or invalid
       console.log('No game ID provided on join game screen...');
     } else {
+      setGameId(gameId);
+
       history.push({
         pathname: '/name',
         search: `?from=${this.props.match.path.slice(1)}&gameId=${gameId}`,

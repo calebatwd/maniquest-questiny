@@ -8,11 +8,11 @@ import * as firebase from 'firebase';
 import colors from './resources/colors.json';
 
 import Title from './components/Title';
-import JoinGame from './components/JoinGame';
 
 import GameContainer from './containers/GameContainer';
 import LobbyContainer from './containers/LobbyContainer';
 import NewGameContainer from './containers/NewGameContainer';
+import JoinGameContainer from './containers/JoinGameContainer';
 import ChooseNameContainer from './containers/ChooseNameContainer';
 
 import configureStore from './configureStore';
@@ -55,7 +55,7 @@ class App extends React.Component {
         <View style={styles.container}>
           <Route exact path="/" component={Title} />
           <Route path="/new" component={NewGameContainer} />
-          <Route path="/join" component={JoinGame} />
+          <Route path="/join" component={JoinGameContainer} />
           <Route path="/name" component={ChooseNameContainer} />
           <Route path="/lobby/:gameId" component={LobbyContainer} />
           <Route path="/game" component={GameContainer} />
