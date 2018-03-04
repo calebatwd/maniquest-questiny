@@ -11,10 +11,11 @@ import colors from './resources/colors.json';
 
 import Lobby from './components/Lobby';
 import Title from './components/Title';
-import NewGame from './components/NewGame';
 import JoinGame from './components/JoinGame';
 import Game from './components/Game';
 import ChooseName from './components/ChooseName';
+
+import NewGameContainer from './containers/NewGameContainer';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -61,7 +62,7 @@ export default class App extends React.Component {
           {this.state.fontLoaded && (
             <View style={styles.container}>
               <Route exact path="/" component={Title} />
-              <Route path="/new" component={NewGame} />
+              <Route path="/new" component={NewGameContainer} />
               <Route path="/join" component={JoinGame} />
               <Route path="/name" component={ChooseName} />
               <Route path="/lobby/:gameId" component={Lobby} />

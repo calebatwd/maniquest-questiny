@@ -12,7 +12,7 @@ class NewGame extends Component {
 
   createGame() {
     const {gameId} = this.state;
-    const {history} = this.props;
+    const {history, setGameId} = this.props;
 
     if (gameId === '') {
       // TODO: display an error if the game ID is empty or invalid
@@ -41,6 +41,7 @@ class NewGame extends Component {
         .ref(`games/${gameId}`)
         .set(initialGameState)
         .then(() => {
+          setGameId(gameId);
           history.push({
             pathname: '/name',
             search: `?from=${this.props.match.path.slice(1)}&gameId=${gameId}`,
