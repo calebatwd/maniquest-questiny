@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, Image} from 'react-native';
 
 import * as firebase from 'firebase';
@@ -9,18 +10,19 @@ class Game extends Component {
   state = {};
 
   componentWillMount() {
-    this.gameId = this.props.match.params.gameId;
+    const {gameId} = this.props;
 
-    const gameRef = firebase.database().ref(`games/${this.gameId}`);
+    const gameRef = firebase.database().ref(`games/${gameId}`);
     gameRef.on(
       'child_added',
       (snap) => {
         const name = snap.val().name;
-        this.setState((prevState) => {
-          return {
-            players: [...prevState.players, {key: name}],
-          };
-        });
+        console.log('Got game data from Firebase');
+        // this.setState((prevState) => {
+        //   return {
+        //     players: [...prevState.players, {key: name}],
+        //   };
+        // });
       },
       (error) => {
         console.log('Failed to fetch players. ' + error);
@@ -29,8 +31,14 @@ class Game extends Component {
   }
 
   render() {
+    const {gameId} = this.props;
+
     return (
       <View style={styles.container}>
+        <Link to="/" underlayColor={colors.slate}>
+          <Text style={styles.backButtonText}>&lt; Home</Text>
+        </Link>
+
         <View>
           <Text>Top</Text>
         </View>
@@ -40,7 +48,7 @@ class Game extends Component {
         <View>
           <Text>Your hand</Text>
         </View>
-        <Text style={styles.title}>Game</Text>
+        <Text style={styles.title}>Game: {gameId}</Text>
       </View>
     );
   }
@@ -61,5 +69,10 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceMonoBold',
     textAlign: 'center',
     color: colors.purple,
+  },
+  backButtonText: {
+    marginTop: 10,
+    fontSize: 24,
+    color: colors.orange,
   },
 });

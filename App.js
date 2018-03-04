@@ -1,10 +1,8 @@
 import React from 'react';
-import thunk from 'redux-thunk';
 import {Font} from 'expo';
 import {Provider} from 'react-redux';
 import {NativeRouter, Route, Link} from 'react-router-native';
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
-import {combineReducers, compose, createStore, applyMiddleware} from 'redux';
 import * as firebase from 'firebase';
 
 import colors from './resources/colors.json';
@@ -12,34 +10,26 @@ import colors from './resources/colors.json';
 import Lobby from './components/Lobby';
 import Title from './components/Title';
 import JoinGame from './components/JoinGame';
-import Game from './components/Game';
 import ChooseName from './components/ChooseName';
 
+import GameContainer from './containers/GameContainer';
 import NewGameContainer from './containers/NewGameContainer';
 
+import configureStore from './configureStore';
+
 // Initialize Firebase
-const firebaseConfig = {
-  apiKey: 'AIzaSyBFHOr5LKNirHqMyWTvpml0MZxVH3-lYD8',
-  authDomain: 'maniquest-questiny.firebaseapp.com',
-  databaseURL: 'https://maniquest-questiny.firebaseio.com/',
-  storageBucket: '<your-storage-bucket>',
-};
-firebase.initializeApp(firebaseConfig);
-
-// Reducers
-import rootReducers from './reducers.js';
-
-// Middleware
-const middleware = [thunk];
-if (process.env.NODE_ENV !== 'production') {
-  const {logger} = require('redux-logger');
-  middleware.push(logger);
+try {
+  const firebaseConfig = {
+    databaseURL: 'https://maniquest-questiny.firebaseio.com/',
+  };
+  firebase.initializeApp(firebaseConfig);
+} catch (error) {
+  if (error.code !== 'app/duplicate-app') {
+    console.log('Error initializing Firebase:', error);
+  }
 }
 
-// Create the Redux store
-const store = createStore(combineReducers({...rootReducers}), applyMiddleware(...middleware));
-
-export default class App extends React.Component {
+class App extends React.Component {
   state = {
     fontLoaded: false,
   };
@@ -56,24 +46,35 @@ export default class App extends React.Component {
   }
 
   render() {
+    if (!this.state.fontLoaded) {
+      return null;
+    }
+
     return (
-      <Provider store={store}>
-        <NativeRouter>
-          {this.state.fontLoaded && (
-            <View style={styles.container}>
-              <Route exact path="/" component={Title} />
-              <Route path="/new" component={NewGameContainer} />
-              <Route path="/join" component={JoinGame} />
-              <Route path="/name" component={ChooseName} />
-              <Route path="/lobby/:gameId" component={Lobby} />
-              <Route path="/game" component={Game} />
-            </View>
-          )}
-        </NativeRouter>
-      </Provider>
+      <NativeRouter>
+        <View style={styles.container}>
+          <Route exact path="/" component={Title} />
+          <Route path="/new" component={NewGameContainer} />
+          <Route path="/join" component={JoinGame} />
+          <Route path="/name" component={ChooseName} />
+          <Route path="/lobby/:gameId" component={Lobby} />
+          <Route path="/game" component={GameContainer} />
+        </View>
+      </NativeRouter>
     );
   }
 }
+
+// Create the Redux store
+const store = configureStore();
+
+export default () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
