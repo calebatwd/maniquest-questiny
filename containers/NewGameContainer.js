@@ -7,9 +7,7 @@ import {setGameId} from '../actions';
 const mapStateToProps = null;
 
 const mapDispatchToProps = (dispatch) => ({
-  setGameId: (gameId) => {
-    dispatch(setGameId(gameId));
-  },
+  setGameId: (gameId) => dispatch(setGameId(gameId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewGame);

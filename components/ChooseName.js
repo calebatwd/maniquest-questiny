@@ -19,7 +19,7 @@ class ChooseName extends Component {
   }
 
   addPlayer() {
-    const {history} = this.props;
+    const {history, setPlayerId} = this.props;
     const {playerName} = this.state;
 
     if (playerName === '') {
@@ -34,6 +34,7 @@ class ChooseName extends Component {
           avatar: 'spaceman',
         })
         .then((snapshot) => {
+          setPlayerId(snapshot.key);
           history.push({
             pathname: `/lobby/${this.gameId}`,
             search: `?playerId=${snapshot.key}}`,
