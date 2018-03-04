@@ -11,37 +11,36 @@ import spaceman from '../resources/img/spaceman.png';
 class Lobby extends Component {
   componentWillMount() {
     const {fetchGameState, gameId} = this.props;
-
-    fetchGameState(this.gameId);
+    fetchGameState(gameId);
   }
 
   renderPlayerList(players) {
-    var playerList = [];
-    for (var key in players) {
-      playerList.push(
-        <View style={styles.slot} key={key}>
-          <Image style={styles.avatar} source={spaceman} />
-          <Text style={styles.playerName}>{players[key].name}</Text>
-        </View>
-      );
+    // Add player placeholders for non-existent players
+    while (players.length < 5) {
+      players.push({avatar: 'spaceman', name: '...'});
     }
 
-    for (var i = playerList.length; i < 5; i++) {
-      playerList.push(
+    const playersList = _.map(players, ({avatar, name}, i) => {
+      return (
         <View style={styles.slot} key={i}>
           <Image style={styles.avatar} source={spaceman} />
-          <Text style={styles.playerName}>...</Text>
+          <Text style={styles.playerName}>{name}</Text>
         </View>
       );
-    }
+    });
 
-    return playerList;
+    return <View>{playersList}</View>;
   }
 
   render() {
-    const {players, gameId} = this.props;
+    const {gameId, players, isFetchingGameState} = this.props;
 
-    const playerList = this.renderPlayerList(players);
+    let mainContent;
+    if (isFetchingGameState) {
+      mainContent = <Text>Loading...</Text>;
+    } else {
+      mainContent = this.renderPlayerList(players);
+    }
 
     return (
       <View style={styles.container}>
@@ -50,8 +49,11 @@ class Lobby extends Component {
         </Link>
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Lobby</Text>
+
           <Text style={styles.subtitle}>Room: {gameId}</Text>
-          <View>{playerList}</View>
+
+          {mainContent}
+
           <Link to="/" style={styles.button} underlayColor={colors.slate}>
             <Text style={styles.buttonText}>Start</Text>
           </Link>

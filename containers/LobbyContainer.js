@@ -5,11 +5,15 @@ import Lobby from '../components/Lobby';
 
 import {fetchGameState} from '../actions';
 
-const mapStateToProps = ({isFetchingGame, gameId, game}) => ({
-  isFetchingGame,
-  gameId,
-  players: _.get(game, 'players', []),
-});
+const mapStateToProps = ({isFetchingGameState, gameId, game}) => {
+  const playersDict = _.get(game, 'players', {});
+
+  return {
+    gameId,
+    players: _.values(playersDict),
+    isFetchingGameState,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   fetchGameState: (gameId) => dispatch(fetchGameState(gameId)),
