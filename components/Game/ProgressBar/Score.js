@@ -20,7 +20,7 @@ const planetIcons = {
 const PlanetScore = ({name, score}) => {
   const planetIconStyles = [styles.planetIcon];
   if (name === 'saturn') {
-    planetIconStyles.push(styles.saturnIconStyles);
+    planetIconStyles.push(styles.saturnIcon);
   }
 
   return (
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
   },
-  saturnIconStyles: {
+  saturnIcon: {
     width: 44,
     height: 44,
   },
