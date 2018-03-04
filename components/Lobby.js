@@ -9,39 +9,39 @@ import colors from '../resources/colors.json';
 import spaceman from '../resources/img/spaceman.png';
 
 class Lobby extends Component {
-  state = {
-    players: [],
-  };
-
   componentWillMount() {
-    this.gameId = this.props.match.params.gameId;
+    const {fetchGameState, gameId} = this.props;
 
-    const playersRef = firebase.database().ref(`games/${this.gameId}/players`);
-    playersRef.on(
-      'value',
-      (snap) => {
-        this.setState((prevState) => ({
-          players: _.values(snap.val()),
-        }));
-      },
-      (error) => {
-        console.log('Failed to fetch players:' + error);
-      }
-    );
+    fetchGameState(this.gameId);
   }
 
-  render() {
-    const {players} = this.state;
-
+  renderPlayerList(players) {
     var playerList = [];
-    for (var i = 0; i < 5; i++) {
+    for (var key in players) {
       playerList.push(
-        <View style={styles.slot} key={i}>
+        <View style={styles.slot} key={key}>
           <Image style={styles.avatar} source={spaceman} />
-          <Text style={styles.playerName}>{players[i] ? players[i].name : '...'}</Text>
+          <Text style={styles.playerName}>{players[key].name}</Text>
         </View>
       );
     }
+
+    for (var i = playerList.length; i < 5; i++) {
+      playerList.push(
+        <View style={styles.slot} key={i}>
+          <Image style={styles.avatar} source={spaceman} />
+          <Text style={styles.playerName}>...</Text>
+        </View>
+      );
+    }
+
+    return playerList;
+  }
+
+  render() {
+    const {players, gameId} = this.props;
+
+    const playerList = this.renderPlayerList(players);
 
     return (
       <View style={styles.container}>
@@ -50,7 +50,7 @@ class Lobby extends Component {
         </Link>
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Lobby</Text>
-          <Text style={styles.subtitle}>Room: {this.gameId}</Text>
+          <Text style={styles.subtitle}>Room: {gameId}</Text>
           <View>{playerList}</View>
           <Link to="/" style={styles.button} underlayColor={colors.slate}>
             <Text style={styles.buttonText}>Start</Text>
