@@ -15,6 +15,4 @@ const mapStateToProps = (state) => ({
   crashesRemaining: state.crashesRemaining,
 });
 
-const mapDispatchToProps = (dispatch) => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(mapStateToProps)(Game);

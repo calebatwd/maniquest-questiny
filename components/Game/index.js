@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 
 import * as actions from '../../actions';
 
@@ -8,6 +8,8 @@ import Hand from './Hand';
 import Board from './Board';
 import ProgressBar from './ProgressBar';
 import {getCard, submitTurn} from '../../utils';
+
+import earthIcon from '../../resources/img/planets/earth.png';
 
 class Game extends Component {
   state = {};
@@ -74,6 +76,7 @@ class Game extends Component {
     const {
       deck,
       hands,
+      gameId,
       scores,
       loggedInPlayerId,
       players,
@@ -89,6 +92,7 @@ class Game extends Component {
 
     return (
       <View style={styles.container}>
+        <Image style={styles.earthIcon} source={earthIcon} />
         <ProgressBar
           deck={deck}
           scores={scores}
@@ -105,6 +109,7 @@ class Game extends Component {
         <Hand
           hand={hands[loggedInPlayerId]}
           player={me}
+          gameId={gameId}
           turnPlayerId={turnPlayerId}
           discardCard={this.discardCard.bind(this)}
           playCard={this.playCard.bind(this)}
@@ -119,5 +124,13 @@ export default Game;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  earthIcon: {
+    position: 'absolute',
+    left: -120,
+    bottom: -420,
+    width: 600,
+    height: 600,
+    transform: [{rotateX: '20deg'}],
   },
 });
