@@ -1,42 +1,54 @@
 import _ from 'lodash';
-import React from 'react';
-import {Text, View, Image, StyleSheet} from 'react-native';
+import React, {Component} from 'react';
+import {Text, View, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 
 import Card from './Card';
 
 import spacemanIcon from '../../resources/img/spaceman.png';
 import {getCard} from '../../utils';
+import colors from '../../resources/colors.json';
 
 const avatars = {
   spaceman: spacemanIcon,
 };
 
-export default ({players, hands, currentPlayerId, playerId}) => {
-  const playersContent = _.map(players, (player) => {
-    if (player.id === playerId) {
-      return;
-    }
+export default class Hand extends Component {
+  render() {
+    const {players, hands, turnPlayerId, loggedInPlayerId, selectedHint, selectHint} = this.props;
+    const playersContent = _.map(players, (player) => {
+      console.log(player);
+      if (player.id === loggedInPlayerId) {
+        return;
+      }
 
-    const turn = currentPlayerId === playerId;
+      const isPlayersTurn = turnPlayerId === player.id;
 
-    const cardsContent = _.map(hands[player.id], (card, i) => {
-      const {planet, rank} = getCard(card);
-      return <Card planet={planet} rank={rank} key={`${player.name}_${i}`} />;
+      const cardsContent = _.map(hands[player.id], (cardId, i) => {
+        const {planet, rank} = getCard(cardId);
+        const selected = selectedHint.cardIds.includes(cardId);
+        return (
+          <TouchableWithoutFeedback onPress={() => selectHint({playerId: player.id, cardId})}>
+            <Card planet={planet} rank={rank} key={`${player.name}_${i}`} selected={selected} />
+          </TouchableWithoutFeedback>
+        );
+      });
+
+      return (
+        <View style={styles.playerContainer} key={player.name}>
+          <View style={styles.playerNameAvatarContainer}>
+            <Image style={styles.playerAvatar} source={avatars[player.avatar]} />
+            <Text style={[styles.playerName, isPlayersTurn && styles.playerNameHighlight]}>
+              {player.name}
+            </Text>
+          </View>
+          <View style={styles.playerCardsContainer}>{cardsContent}</View>
+        </View>
+      );
     });
 
-    return (
-      <View style={styles.playerContainer} key={player.name}>
-        <View style={styles.playerNameAvatarContainer}>
-          <Image style={styles.playerAvatar} source={avatars[player.avatar]} />
-          <Text style={[styles.playerName, turn && styles.playerNameHighlight]}>{player.name}</Text>
-        </View>
-        <View style={styles.playerCardsContainer}>{cardsContent}</View>
-      </View>
-    );
-  });
-
-  return <View style={styles.playersContainer}>{playersContent}</View>;
-};
+    return <View style={styles.playersContainer}>{playersContent}</View>;
+  }
+}
 
 const styles = StyleSheet.create({
   playersContainer: {
@@ -58,7 +70,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceMonoBold',
   },
   playerNameHighlight: {
-    color: 'red',
+    color: colors.purple,
   },
   playerAvatar: {
     width: 48,

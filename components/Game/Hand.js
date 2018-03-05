@@ -35,18 +35,8 @@ const planetIcons = {
 };
 
 export default class Hand extends Component {
-  state = {};
-
-  toggleSelect(card) {
-    if (this.state.selectedCard === card) {
-      this.setState({selectedCard: null});
-    } else {
-      this.setState({selectedCard: card});
-    }
-  }
-
   render() {
-    const {hand, player, turnPlayerId, discardCard, playCard} = this.props;
+    const {hand, player, turnPlayerId, selectedCardToPlay, selectCardToPlay} = this.props;
     const {name, avatar} = player;
 
     const myTurn = player.id === turnPlayerId;
@@ -73,7 +63,7 @@ export default class Hand extends Component {
 
       return (
         <Animatable.View
-          animation={this.state.selectedCard === card ? 'slideInDown' : undefined}
+          animation={selectedCardToPlay === card ? 'slideInDown' : undefined}
           easing="ease-in-back"
           iterationCount="infinite"
           direction="alternate"
@@ -82,33 +72,15 @@ export default class Hand extends Component {
           key={i}
         >
           {hintContent}
-          <TouchableWithoutFeedback onPress={() => this.toggleSelect(card)}>
+          <TouchableWithoutFeedback onPress={() => selectCardToPlay(card)}>
             <Image style={styles.shipIcon} source={shipIcon} />
           </TouchableWithoutFeedback>
         </Animatable.View>
       );
     });
 
-    const commandView = (
-      <View style={styles.commandContainer}>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={() => discardCard(this.state.selectedCard, turnPlayerId)}
-        >
-          <Text style={styles.buttonText}>Scuttle</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={() => playCard(this.state.selectedCard, turnPlayerId)}
-        >
-          <Text style={styles.buttonText}>Launch</Text>
-        </TouchableHighlight>
-      </View>
-    );
-
     return (
       <View style={styles.playerContainer}>
-        {this.state.selectedCard && myTurn && commandView}
         <View style={styles.nameAvatarContainer}>
           <Image style={styles.avatar} source={avatars[avatar]} />
           <Text style={[styles.name, myTurn && styles.nameHighlight]}>{name}</Text>
@@ -134,7 +106,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceMonoBold',
   },
   nameHighlight: {
-    color: 'red',
+    color: colors.purple,
   },
   avatar: {
     width: 48,

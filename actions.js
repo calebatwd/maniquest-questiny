@@ -10,6 +10,8 @@ export const DISCARD_CARD = 'DISCARD_CARD';
 export const PLAY_CARD = 'PLAY_CARD';
 export const SHUFFLE_DECK = 'SHUFFLE_DECK';
 export const UPDATE_HANDS = 'UPDATE_HANDS';
+export const SELECT_CARD_TO_PLAY = 'SELECT_CARD_TO_PLAY';
+export const SELECT_HINT = 'SELECT_HINT';
 
 export function setGameId(gameId) {
   return {
@@ -94,5 +96,19 @@ export function setLoggedInPlayerId(loggedInPlayerId) {
   return {
     type: SET_LOGGED_IN_PLAYER_ID,
     loggedInPlayerId,
+  };
+}
+
+export function selectCardToPlay(cardToPlay) {
+  return {
+    type: SELECT_CARD_TO_PLAY,
+    cardToPlay,
+  };
+}
+
+export function selectCardToHint(selectedHint) {
+  return {
+    type: SELECT_HINT,
+    selectedHint,
   };
 }

@@ -4,14 +4,13 @@ import {StyleSheet, View} from 'react-native';
 
 import * as actions from '../../actions';
 
-import Hand from './Hand';
-import Board from './Board';
 import ProgressBar from './ProgressBar';
 import {getCard, submitTurn} from '../../utils';
+import HandContainer from '../../containers/HandContainer';
+import BoardContainer from '../../containers/BoardContainer';
+import CommandContainer from '../../containers/CommandContainer';
 
 class Game extends Component {
-  state = {};
-
   giveHint(cardIds, hint, actorPlayerId) {
     const {hands, gameId} = this.props;
     const playerHand = hands[actorPlayerId];
@@ -85,7 +84,6 @@ class Game extends Component {
 
     const me = _.find(players, ['id', loggedInPlayerId]);
     const turnPlayerId = players[turnIndex % players.length].id;
-    console.log('PLAYERINFO', players, loggedInPlayerId, me, turnPlayerId);
 
     return (
       <View style={styles.container}>
@@ -96,18 +94,19 @@ class Game extends Component {
           hintsRemaining={hintsRemaining}
           crashesRemaining={crashesRemaining}
         />
-        <Board
+        <BoardContainer
           players={players}
           hands={hands}
           turnPlayerId={turnPlayerId}
           loggedInPlayerId={loggedInPlayerId}
         />
-        <Hand
-          hand={hands[loggedInPlayerId]}
-          player={me}
+        <HandContainer hand={hands[loggedInPlayerId]} player={me} turnPlayerId={turnPlayerId} />
+        <CommandContainer
           turnPlayerId={turnPlayerId}
+          loggedInPlayerId={loggedInPlayerId}
           discardCard={this.discardCard.bind(this)}
           playCard={this.playCard.bind(this)}
+          giveHint={this.giveHint.bind(this)}
         />
       </View>
     );

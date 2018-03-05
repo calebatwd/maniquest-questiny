@@ -51,16 +51,10 @@ export const submitTurn = (gameId, turn, extraState) => {
   switch (turn.type) {
     case actions.PLAY_CARD:
     case actions.DISCARD_CARD:
-      console.log('FOO:', turn, extraState);
-
       let newHands = extraState.hands;
-      console.log('A:', newHands);
-      console.log('A:', newHands[turn.actor]);
       const oldCardIndex = newHands[turn.actor].indexOf(turn.cardId);
       newHands[turn.actor].splice(oldCardIndex, 1);
-      console.log('B:', newHands);
       newHands[turn.actor].push(extraState.deck.shift());
-      console.log('C:', newHands);
 
       updatedState['hands'] = newHands;
       break;

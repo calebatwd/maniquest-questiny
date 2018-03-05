@@ -16,14 +16,14 @@ const planetIcons = {
   mercury: mercuryIcon,
 };
 
-export default ({rank, planet}) => {
+export default ({rank, planet, selected}) => {
   const planetIconStyles = [styles.planetIcon];
   if (planet === 'saturn') {
     planetIconStyles.push(styles.saturnIcon);
   }
 
   return (
-    <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, selected && styles.selectedCard]}>
       <Image style={planetIconStyles} source={planetIcons[planet]} />
       <Image style={styles.shipIcon} source={shipIcon} />
       <Text style={styles.cardRank}>{rank}</Text>
@@ -36,6 +36,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  selectedCard: {
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#d6d7da',
   },
   planetIcon: {
     width: 68,

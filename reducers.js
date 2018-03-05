@@ -134,6 +134,48 @@ const rootReducers = {
         return state;
     }
   },
+  selectedCardToPlay: (state = null, action) => {
+    switch (action.type) {
+      case actions.SELECT_CARD_TO_PLAY:
+        return action.cardToPlay !== state ? action.cardToPlay : null;
+      case actions.SELECT_HINT:
+      case actions.GIVE_HINT:
+      case actions.PLAY_CARD:
+      case actions.DISCARD_CARD:
+        return null;
+      default:
+        return state;
+    }
+  },
+  selectedHint: (state = {cardIds: []}, action) => {
+    switch (action.type) {
+      case actions.SELECT_HINT:
+        const {selectedHint} = action;
+        if (selectedHint.playerId !== state.player) {
+          // This new hint isn't intended for the previously targeted player
+          return {playerId: selectedHint.playerId, cardIds: [selectedHint.cardId]};
+        } else if (state.cardIds.includes(selectedHint.cardId)) {
+          // This new hint is for the targeted player, but it's the same card so toggle it
+          return {
+            playerId: selectedHint.playerId,
+            cardIds: state.cardIds.filter((c) => c !== selectedHint.cardId),
+          };
+        } else {
+          // This new hint is for the targeted player and is a new card to show
+          return {
+            playerId: selectedHint.playerId,
+            cardIds: [...state.cards, selectedHint.cardId],
+          };
+        }
+      case actions.SELECT_CARD_TO_PLAY:
+      case actions.GIVE_HINT:
+      case actions.PLAY_CARD:
+      case actions.DISCARD_CARD:
+        return {cardIds: []};
+      default:
+        return state;
+    }
+  },
 };
 
 export default combineReducers({...rootReducers});
