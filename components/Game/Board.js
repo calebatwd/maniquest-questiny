@@ -5,56 +5,28 @@ import {Text, View, Image, StyleSheet} from 'react-native';
 import Card from './Card';
 
 import spacemanIcon from '../../resources/img/spaceman.png';
+import {getCard} from '../../utils';
 
 const avatars = {
   spaceman: spacemanIcon,
 };
 
-export default ({}) => {
-  // TODO: use card array passed in from props
-  const players = [
-    {
-      name: 'Caleb',
-      avatar: 'spaceman',
-      cards: [
-        {planet: 'mars', rank: 4},
-        {planet: 'mercury', rank: 5},
-        {planet: 'saturn', rank: 4},
-        {planet: 'mars', rank: 2},
-      ],
-    },
-    {
-      name: 'Lunar Larry',
-      avatar: 'spaceman',
-      cards: [
-        {planet: 'venus', rank: 1},
-        {planet: 'mercury', rank: 4},
-        {planet: 'jupiter', rank: 1},
-        {planet: 'jupiter', rank: 1},
-      ],
-    },
-    {
-      name: 'Spaceman Sam',
-      avatar: 'spaceman',
-      cards: [
-        {planet: 'mercury', rank: 3},
-        {planet: 'mars', rank: 1},
-        {planet: 'saturn', rank: 2},
-        {planet: 'saturn', rank: 5},
-      ],
-    },
-  ];
+export default ({players, hands, turnIndex, playerId}) => {
+  const playersContent = _.map(players, (player) => {
+    if (player.id == playerId) {
+      return;
+    }
 
-  const playersContent = _.map(players, ({name, avatar, cards}) => {
-    const cardsContent = _.map(cards, ({rank, planet}, i) => {
-      return <Card planet={planet} rank={rank} key={`${name}_${i}`} />;
+    const cardsContent = _.map(hands[player.id], (card, i) => {
+      const {planet, rank} = getCard(card);
+      return <Card planet={planet} rank={rank} key={`${player.name}_${i}`} />;
     });
 
     return (
-      <View style={styles.playerContainer} key={name}>
+      <View style={styles.playerContainer} key={player.name}>
         <View style={styles.playerNameAvatarContainer}>
-          <Image style={styles.playerAvatar} source={avatars[avatar]} />
-          <Text style={styles.playerName}>{name}</Text>
+          <Image style={styles.playerAvatar} source={avatars[player.avatar]} />
+          <Text style={styles.playerName}>{player.name}</Text>
         </View>
         <View style={styles.playerCardsContainer}>{cardsContent}</View>
       </View>

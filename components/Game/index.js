@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
 import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, Image} from 'react-native';
@@ -36,11 +37,14 @@ class Game extends Component {
       gameId,
       scores,
       playerId,
-      playerOrder,
+      players,
       discardedCards,
       hintsRemaining,
       crashesRemaining,
+      turnIndex,
     } = this.props;
+
+    const currentPlayer = _.find(players, ['id', playerId]);
 
     return (
       <View style={styles.container}>
@@ -51,8 +55,8 @@ class Game extends Component {
           hintsRemaining={hintsRemaining}
           crashesRemaining={crashesRemaining}
         />
-        <Board />
-        <Hand />
+        <Board players={players} hands={hands} turnIndex={turnIndex} playerId={playerId} />
+        <Hand hand={hands[playerId]} player={currentPlayer} turnIndex={turnIndex} />
       </View>
     );
   }

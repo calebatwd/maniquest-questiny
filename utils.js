@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 
 export const getCard = (card) => {
-  const [planet, rank, iter] = action.card.split('_');
+  const [planet, rank, iter] = card.split('_');
   return {planet, rank, iter};
 };
 

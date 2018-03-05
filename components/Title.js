@@ -17,10 +17,6 @@ export default class Title extends React.Component {
         <Link to="/join" style={styles.button} underlayColor={colors.slate}>
           <Text style={styles.buttonText}>Join Game</Text>
         </Link>
-
-        <Link to="/game" style={styles.button} underlayColor={colors.slate}>
-          <Text style={styles.buttonText}>Foo Game</Text>
-        </Link>
       </View>
     );
   }

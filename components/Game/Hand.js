@@ -28,16 +28,9 @@ const planetIcons = {
 
 import colors from '../../resources/colors.json';
 
-export default ({}) => {
-  // TODO: use card array passed in from props
-  const cards = [
-    {planet: 'mars', rank: 4, hint: 'planet'},
-    {planet: 'mercury', rank: 5},
-    {planet: 'saturn', rank: 4, hint: 'rank'},
-    {planet: 'mars', rank: 2, hint: 'both'},
-  ];
-
-  const cardsContent = _.map(cards, ({rank, planet, hint}, i) => {
+export default ({hand, player, turnIndex}) => {
+  const {name, avatar} = player;
+  const cardsContent = _.map(hand, ({rank, planet, hint}, i) => {
     let hintContent;
     if (hint === 'planet') {
       hintContent = <Image style={styles.hintIcon} source={planetIcons[planet]} />;
@@ -67,8 +60,8 @@ export default ({}) => {
   return (
     <View style={styles.playerContainer}>
       <View style={styles.nameAvatarContainer}>
-        <Image style={styles.avatar} source={avatars.spaceman} />
-        <Text style={styles.name}>Me</Text>
+        <Image style={styles.avatar} source={avatars[avatar]} />
+        <Text style={styles.name}>{name}</Text>
       </View>
       <View style={styles.cardsContainer}>{cardsContent}</View>
     </View>
