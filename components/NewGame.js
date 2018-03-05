@@ -4,10 +4,13 @@ import {withRouter} from 'react-router';
 import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight} from 'react-native';
 
+import {getRandomString} from '../utils';
 import colors from '../resources/colors.json';
 
 class NewGame extends Component {
-  state = {gameId: ''};
+  // TODO: get rid of random game ID
+  // state = {gameId: ''};
+  state = {gameId: getRandomString(4)};
 
   createGame() {
     const {gameId} = this.state;
@@ -50,6 +53,7 @@ class NewGame extends Component {
             placeholder="e.g. mars-rover"
             placeholderTextColor={colors.lightGray}
             onChangeText={(gameId) => this.setState({gameId: gameId.trim()})}
+            value={this.state.gameId}
           />
           <TouchableHighlight
             style={styles.newButton}

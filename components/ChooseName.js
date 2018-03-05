@@ -5,10 +5,13 @@ import {withRouter} from 'react-router';
 import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight} from 'react-native';
 
+import {getRandomString} from '../utils';
 import colors from '../resources/colors.json';
 
 class ChooseName extends Component {
-  state = {playerName: ''};
+  // TODO: get rid of random game ID
+  // state = {playerName: ''};
+  state = {playerName: getRandomString(4)};
 
   constructor(props) {
     super(props);
@@ -60,6 +63,7 @@ class ChooseName extends Component {
             placeholder="e.g. Lunar Larry"
             placeholderTextColor={colors.lightGray}
             onChangeText={(playerName) => this.setState({playerName})}
+            value={this.state.playerName}
           />
           <TouchableHighlight
             onPress={() => this.addPlayer()}

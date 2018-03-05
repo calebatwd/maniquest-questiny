@@ -8,6 +8,16 @@ export const getCard = (card) => {
   return {planet, rank, iter};
 };
 
+export const getRandomString = (length) => {
+  let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    result += chars[randomIndex];
+  }
+  return result;
+};
+
 export const submitTurn = (gameId, turn, extraState) => {
   const gameRef = firebase.database().ref(`/games/${gameId}`);
   const turnKey = gameRef.push().key;
