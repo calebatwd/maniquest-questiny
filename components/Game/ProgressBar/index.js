@@ -6,20 +6,18 @@ import Score from './Score';
 import HintCounter from './HintCounter';
 import CrashCounter from './CrashCounter';
 
-export default class ProgressBar extends Component {
-  render() {
-    return (
-      <View style={styles.outerContainer}>
-        <View style={styles.countersContainer}>
-          <HintCounter />
-          <CrashCounter />
-        </View>
-        <Score />
-        <Deck />
-      </View>
-    );
-  }
-}
+// TODO: display discarded cards
+
+export default ({deck, scores, discardedCards, hintsRemaining, crashesRemaining}) => (
+  <View style={styles.outerContainer}>
+    <View style={styles.countersContainer}>
+      <HintCounter hintsRemaining={hintsRemaining} />
+      <CrashCounter crashesRemaining={crashesRemaining} />
+    </View>
+    <Score scores={scores} />
+    <Deck deck={deck} />
+  </View>
+);
 
 const styles = StyleSheet.create({
   outerContainer: {

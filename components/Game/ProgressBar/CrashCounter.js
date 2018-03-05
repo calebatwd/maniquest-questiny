@@ -5,16 +5,12 @@ import crashIcon from '../../../resources/img/crash.png';
 
 import colors from '../../../resources/colors.json';
 
-export default class CrashCounter extends Component {
-  render() {
-    return (
-      <View style={styles.crashContainer}>
-        <Image style={styles.crashIcon} source={crashIcon} />
-        <Text style={styles.crashText}>2/3</Text>
-      </View>
-    );
-  }
-}
+export default ({crashesRemaining}) => (
+  <View style={styles.crashContainer}>
+    <Image style={styles.crashIcon} source={crashIcon} />
+    <Text style={styles.crashText}>{crashesRemaining}/3</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   crashContainer: {

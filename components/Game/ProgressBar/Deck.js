@@ -5,16 +5,12 @@ import deckIcon from '../../../resources/img/deck.png';
 
 import colors from '../../../resources/colors.json';
 
-export default class Deck extends Component {
-  render() {
-    return (
-      <View style={styles.deckContainer}>
-        <Text style={styles.deckText}>26</Text>
-        <Image style={styles.deckIcon} source={deckIcon} />
-      </View>
-    );
-  }
-}
+export default ({deck}) => (
+  <View style={styles.deckContainer}>
+    <Text style={styles.deckText}>{deck.length}</Text>
+    <Image style={styles.deckIcon} source={deckIcon} />
+  </View>
+);
 
 const styles = StyleSheet.create({
   deckContainer: {

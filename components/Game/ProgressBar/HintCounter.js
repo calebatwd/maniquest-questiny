@@ -5,16 +5,12 @@ import hintIcon from '../../../resources/img/hint.png';
 
 import colors from '../../../resources/colors.json';
 
-export default class HintCounter extends Component {
-  render() {
-    return (
-      <View style={styles.hintContainer}>
-        <Image style={styles.hintIcon} source={hintIcon} />
-        <Text style={styles.hintText}>3/8</Text>
-      </View>
-    );
-  }
-}
+export default ({hintsRemaining}) => (
+  <View style={styles.hintContainer}>
+    <Image style={styles.hintIcon} source={hintIcon} />
+    <Text style={styles.hintText}>{hintsRemaining}/8</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   hintContainer: {
