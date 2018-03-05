@@ -2,6 +2,7 @@ import _ from 'lodash';
 import color from 'color';
 import React, {Component} from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 import Card from './Card';
 
@@ -50,10 +51,18 @@ export default ({hand, player, turnIndex}) => {
     }
 
     return (
-      <View style={styles.shipContainer} key={i}>
+      <Animatable.View
+        animation="pulse"
+        easing="linear"
+        iterationCount="infinite"
+        direction="alternate"
+        duration={2500}
+        style={styles.shipContainer}
+        key={i}
+      >
         {hintContent}
         <Image style={styles.shipIcon} source={shipIcon} />
-      </View>
+      </Animatable.View>
     );
   });
 

@@ -66,12 +66,12 @@ const rootReducers = {
   hintsRemaining: (state = 8, action) => {
     switch (action.type) {
       case actions.GIVE_HINT:
-        return state - 1;
+        return Math.max(0, state - 1);
       case actions.DISCARD_CARD:
-        return state + 1;
+        return Math.min(8, state + 1);
       case actions.PLAY_CARD:
         const card = getCard(action.card);
-        return action.successful && card.rank === '5' ? state + 1 : state;
+        return action.successful && card.rank === '5' ? Math.min(8, state + 1) : state;
       default:
         return state;
     }
