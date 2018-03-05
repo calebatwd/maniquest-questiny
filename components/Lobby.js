@@ -1,17 +1,43 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
 import {Link} from 'react-router-native';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableHighlight} from 'react-native';
 
 import * as firebase from 'firebase';
+import * as actions from '../actions';
 
 import colors from '../resources/colors.json';
 import spaceman from '../resources/img/spaceman.png';
+import {submitTurn} from '../utils';
 
 class Lobby extends Component {
   componentWillMount() {
-    const {fetchGameState, gameId} = this.props;
-    fetchGameState(gameId);
+    const {fetchPlayers, fetchTurns, gameId} = this.props;
+    fetchPlayers(gameId);
+    fetchTurns(gameId);
+  }
+
+  startGame() {
+    const {players, gameId} = this.props;
+
+    if (gameId === '') {
+      // TODO: display an error if the game ID is empty or invalid
+      console.log('No game ID provided on new game screen...');
+    } else {
+      var cards = [];
+      const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
+      const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
+      planets.forEach((planet) => {
+        ranks.forEach((rank) => {
+          cards.push(`${planet}_${rank}`);
+        });
+      });
+
+      cards = _.shuffle(cards);
+      const order = _.shuffle(_.keys(players));
+
+      submitTurn(gameId, {type: actions.SHUFFLE_DECK, cards, order});
+    }
   }
 
   renderPlayerList(players) {
@@ -33,13 +59,13 @@ class Lobby extends Component {
   }
 
   render() {
-    const {gameId, players, isFetchingGameState} = this.props;
+    const {gameId, players, isFetchingPlayers} = this.props;
 
     let mainContent;
-    if (isFetchingGameState) {
+    if (isFetchingPlayers) {
       mainContent = <Text>Loading...</Text>;
     } else {
-      mainContent = this.renderPlayerList(players);
+      mainContent = this.renderPlayerList(_.values(players));
     }
 
     return (
@@ -54,9 +80,13 @@ class Lobby extends Component {
 
           {mainContent}
 
-          <Link to="/" style={styles.button} underlayColor={colors.slate}>
-            <Text style={styles.buttonText}>Start</Text>
-          </Link>
+          <TouchableHighlight
+            style={styles.launchButton}
+            underlayColor={colors.slate}
+            onPress={() => this.startGame()}
+          >
+            <Text style={styles.launchButtonText}>Start</Text>
+          </TouchableHighlight>
         </View>
       </View>
     );
@@ -119,5 +149,18 @@ const styles = StyleSheet.create({
   playerName: {
     fontFamily: 'SpaceMonoBold',
     fontSize: 32,
+  },
+  launchButton: {
+    alignItems: 'center',
+    backgroundColor: colors.orange,
+    padding: 10,
+    margin: 16,
+    width: 200,
+    height: 60,
+    justifyContent: 'center',
+  },
+  launchButtonText: {
+    fontSize: 20,
+    color: colors.white,
   },
 });

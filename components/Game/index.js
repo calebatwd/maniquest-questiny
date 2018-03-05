@@ -3,6 +3,7 @@ import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, Image} from 'react-native';
 
 import * as firebase from 'firebase';
+import * as actions from '../../actions';
 
 import Hand from './Hand';
 import Board from './Board';
@@ -23,39 +24,10 @@ class Game extends Component {
 
   discardCard(card) {
     // Make sure the card is valid to discard
-    this.submitTurn({type: actions.DISCARD_CARD, card});
+    submitTurn({type: actions.DISCARD_CARD, card});
   }
 
-  submitTurn(turn) {
-    firebase
-      .database()
-      .ref(`/games/${gameId}/turns`)
-      .push(turn, (error) => {
-        if (error) console.log('Error pushing turn', error);
-        else console.log('Turn submitted');
-      });
-  }
-
-  componentWillMount() {
-    const {gameId} = this.props;
-
-    const gameRef = firebase.database().ref(`games/${gameId}`);
-    gameRef.on(
-      'child_added',
-      (snap) => {
-        const name = snap.val().name;
-        console.log('Got game data from Firebase');
-        // this.setState((prevState) => {
-        //   return {
-        //     players: [...prevState.players, {key: name}],
-        //   };
-        // });
-      },
-      (error) => {
-        console.log('Failed to fetch players. ' + error);
-      }
-    );
-  }
+  componentWillMount() {}
 
   render() {
     const {gameId} = this.props;

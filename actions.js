@@ -1,8 +1,6 @@
 import * as firebase from 'firebase';
 
 export const SET_GAME_ID = 'SET_GAME_ID';
-export const FETCH_GAME_STATE = 'FETCH_GAME_STATE';
-export const UPDATE_GAME_STATE = 'UPDATE_GAME_STATE';
 export const FETCH_PLAYERS = 'FETCH_PLAYERS';
 export const UPDATE_PLAYERS = 'UPDATE_PLAYERS';
 export const SET_PLAYER_ID = 'SET_PLAYER_ID';
@@ -10,39 +8,12 @@ export const SET_PLAYER_ID = 'SET_PLAYER_ID';
 export const GIVE_HINT = 'GIVE_HINT';
 export const DISCARD_CARD = 'DISCARD_CARD';
 export const PLAY_CARD = 'PLAY_CARD';
+export const SHUFFLE_DECK = 'SHUFFLE_DECK';
 
 export function setGameId(gameId) {
   return {
     type: SET_GAME_ID,
     gameId,
-  };
-}
-
-export function fetchGameState(gameId) {
-  return (dispatch) => {
-    dispatch({
-      type: FETCH_GAME_STATE,
-    });
-
-    firebase
-      .database()
-      .ref(`/games/${gameId}`)
-      .on(
-        'value',
-        (snapshot) => {
-          dispatch(updateGameState(snapshot.val()));
-        },
-        (error) => {
-          console.log(`Error fetching game state for "${gameId}" from Firebase:`, error);
-        }
-      );
-  };
-}
-
-export function updateGameState(game) {
-  return {
-    type: UPDATE_GAME_STATE,
-    game,
   };
 }
 
@@ -80,7 +51,7 @@ export function fetchTurns(gameId) {
       .database()
       .ref(`/games/${gameId}/turns`)
       .on(
-        'childAdded',
+        'child_added',
         (snapshot) => {
           dispatch(snapshot.val());
         },

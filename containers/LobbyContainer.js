@@ -3,20 +3,19 @@ import _ from 'lodash';
 
 import Lobby from '../components/Lobby';
 
-import {fetchGameState} from '../actions';
+import {fetchPlayers, fetchTurns} from '../actions';
 
-const mapStateToProps = ({isFetchingGameState, gameId, game}) => {
-  const playersDict = _.get(game, 'players', {});
-
+const mapStateToProps = ({isFetchingPlayers, gameId, players}) => {
   return {
     gameId,
-    players: _.values(playersDict),
-    isFetchingGameState,
+    players,
+    isFetchingPlayers,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchGameState: (gameId) => dispatch(fetchGameState(gameId)),
+  fetchPlayers: (gameId) => dispatch(fetchPlayers(gameId)),
+  fetchTurns: (gameId) => dispatch(fetchTurns(gameId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lobby);

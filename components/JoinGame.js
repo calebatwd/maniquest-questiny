@@ -22,7 +22,7 @@ class JoinGame extends Component {
 
       history.push({
         pathname: '/name',
-        search: `?from=${this.props.match.path.slice(1)}&gameId=${gameId}`,
+        search: `?from=${this.props.match.path.slice(1)}`,
       });
     }
   }

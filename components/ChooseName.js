@@ -13,13 +13,12 @@ class ChooseName extends Component {
   constructor(props) {
     super(props);
 
-    const {from, gameId} = queryString.parse(props.location.search);
+    const {from} = queryString.parse(props.location.search);
     this.from = from;
-    this.gameId = gameId;
   }
 
   addPlayer() {
-    const {history, setPlayerId} = this.props;
+    const {history, setPlayerId, gameId} = this.props;
     const {playerName} = this.state;
 
     if (playerName === '') {
@@ -28,7 +27,7 @@ class ChooseName extends Component {
     } else {
       firebase
         .database()
-        .ref(`games/${this.gameId}/players`)
+        .ref(`games/${gameId}/players`)
         .push({
           name: playerName.trim(),
           avatar: 'spaceman',
@@ -36,7 +35,7 @@ class ChooseName extends Component {
         .then((snapshot) => {
           setPlayerId(snapshot.key);
           history.push({
-            pathname: `/lobby/${this.gameId}`,
+            pathname: `/lobby`,
             search: `?playerId=${snapshot.key}}`,
           });
         })

@@ -57,7 +57,7 @@ class App extends React.Component {
           <Route path="/new" component={NewGameContainer} />
           <Route path="/join" component={JoinGameContainer} />
           <Route path="/name" component={ChooseNameContainer} />
-          <Route path="/lobby/:gameId" component={LobbyContainer} />
+          <Route path="/lobby" component={LobbyContainer} />
           <Route path="/game" component={GameContainer} />
         </View>
       </NativeRouter>

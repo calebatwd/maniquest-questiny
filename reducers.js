@@ -36,31 +36,11 @@ const rootReducers = {
         return state;
     }
   },
-  game: (state = null, action) => {
-    switch (action.type) {
-      case actions.FETCH_GAME_STATE:
-        return null;
-      case actions.UPDATE_GAME_STATE:
-        return action.game;
-      default:
-        return state;
-    }
-  },
-  isFetchingGameState: (state = false, action) => {
-    switch (action.type) {
-      case actions.FETCH_GAME_STATE:
-        return true;
-      case actions.UPDATE_GAME_STATE:
-        return action.game === null;
-      default:
-        return state;
-    }
-  },
   players: (state = null, action) => {
     switch (action.type) {
       case actions.FETCH_PLAYERS:
         return state;
-      case action.UPDATE_GAME_STATE:
+      case actions.UPDATE_PLAYERS:
         return action.players;
       default:
         return state;
@@ -70,7 +50,7 @@ const rootReducers = {
     switch (action.type) {
       case actions.FETCH_PLAYERS:
         return true;
-      case actions.UPDATE_GAME_STATE:
+      case actions.UPDATE_PLAYERS:
         return action.game === null;
       default:
         return state;
@@ -137,6 +117,19 @@ const rootReducers = {
           reducedHand.push(newCard);
         }
         return {...state, [action.playerId]: reducedHand};
+      default:
+        return state;
+    }
+  },
+  playerOrder: (state = null, action) => {
+    switch (action.type) {
+      case actions.SHUFFLE_DECK:
+        return {current: 0, order: action.order};
+      case actions.GIVE_HINT:
+      case actions.DISCARD_CARD:
+      case actions.PLAY_CARD:
+        const newCurrent = state.current + 1 % state.order;
+        return {...state, current: newCurrent};
       default:
         return state;
     }

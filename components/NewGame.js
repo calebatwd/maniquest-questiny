@@ -6,6 +6,7 @@ import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight} from 'react-native';
 
 import colors from '../resources/colors.json';
+import * as actions from '../actions';
 
 class NewGame extends Component {
   state = {gameId: ''};
@@ -18,33 +19,15 @@ class NewGame extends Component {
       // TODO: display an error if the game ID is empty or invalid
       console.log('No game ID provided on new game screen...');
     } else {
-      const initialGameState = {
-        deck: [],
-        progress: {
-          hintsRemaining: 8,
-          crashesRemaining: 3,
-        },
-      };
-      const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
-      const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
-      planets.forEach((planet) => {
-        _.set(initialGameState, `progress.scores.${planet}`, 0);
-        ranks.forEach((rank) => {
-          initialGameState.deck.push(`${planet}_${rank}`);
-        });
-      });
-
-      initialGameState.deck = _.shuffle(initialGameState.deck);
-
       firebase
         .database()
         .ref(`games/${gameId}`)
-        .set(initialGameState)
+        .set({exists: true})
         .then(() => {
           setGameId(gameId);
           history.push({
             pathname: '/name',
-            search: `?from=${this.props.match.path.slice(1)}&gameId=${gameId}`,
+            search: `?from=${this.props.match.path.slice(1)}`,
           });
         })
         .catch((error) => {
