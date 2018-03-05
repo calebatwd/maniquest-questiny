@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import color from 'color';
+import * as firebase from 'firebase';
 import React, {Component} from 'react';
 import {
   Text,
@@ -9,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   TouchableHighlight,
 } from 'react-native';
+import SortableGrid from 'react-native-sortable-grid';
 import * as Animatable from 'react-native-animatable';
 
 import shipIcon from '../../resources/img/ship.png';
@@ -21,6 +23,8 @@ import jupiterIcon from '../../resources/img/planets/jupiter.png';
 import mercuryIcon from '../../resources/img/planets/mercury.png';
 
 import colors from '../../resources/colors.json';
+
+import {getCard} from '../../utils';
 
 const avatars = {
   spaceman: spacemanIcon,
@@ -35,14 +39,39 @@ const planetIcons = {
 };
 
 export default class Hand extends Component {
+  state = {};
+
+  toggleSelect(cardId) {
+    this.setState({
+      selectedCardId: this.state.selectedCardId === cardId ? null : cardId,
+    });
+  }
+
+  updateHandOrder({itemOrder}) {
+    const {gameId, player} = this.props;
+
+    const updatedHand = _.map(itemOrder, (obj) => obj.key);
+
+    firebase
+      .database()
+      .ref(`games/${gameId}/hands/${player.id}`)
+      .set(updatedHand)
+      .catch((error) => {
+        console.log(
+          `Error re-ordering hand order for logged-in player for game "${gameId}" in Firebase:`,
+          error
+        );
+      });
+  }
+
   render() {
     const {hand, player, turnPlayerId, selectedCardToPlay, selectCardToPlay} = this.props;
     const {name, avatar} = player;
 
     const myTurn = player.id === turnPlayerId;
 
-    const cardsContent = _.map(hand, (card, i) => {
-      const {rank, planet, hint} = card;
+    const cardsContent = _.map(hand, (cardId, i) => {
+      const {rank, planet, hint} = getCard(cardId);
       let hintContent;
       if (hint === 'planet') {
         hintContent = <Image style={styles.hintIcon} source={planetIcons[planet]} />;
@@ -61,21 +90,28 @@ export default class Hand extends Component {
         );
       }
 
+      // return (
+      //   <Animatable.View
+      //     animation={this.state.selectedCardId === cardId ? 'slideInDown' : undefined}
+      //     easing="ease-in-back"
+      //     iterationCount="infinite"
+      //     direction="alternate"
+      //     duration={3000}
+      //     style={styles.shipContainer}
+      //     key={cardId}
+      //   >
+      //     {hintContent}
+      //     <TouchableWithoutFeedback onPress={() => this.toggleSelect(cardId)}>
+      //       <Image style={styles.shipIcon} source={shipIcon} />
+      //     </TouchableWithoutFeedback>
+      //   </Animatable.View>
+      // );
+
       return (
-        <Animatable.View
-          animation={selectedCardToPlay === card ? 'slideInDown' : undefined}
-          easing="ease-in-back"
-          iterationCount="infinite"
-          direction="alternate"
-          duration={3000}
-          style={styles.shipContainer}
-          key={i}
-        >
+        <View key={cardId}>
           {hintContent}
-          <TouchableWithoutFeedback onPress={() => selectCardToPlay(card)}>
-            <Image style={styles.shipIcon} source={shipIcon} />
-          </TouchableWithoutFeedback>
-        </Animatable.View>
+          <Image style={styles.shipIcon} source={shipIcon} />
+        </View>
       );
     });
 
@@ -85,7 +121,13 @@ export default class Hand extends Component {
           <Image style={styles.avatar} source={avatars[avatar]} />
           <Text style={[styles.name, myTurn && styles.nameHighlight]}>{name}</Text>
         </View>
-        <View style={styles.cardsContainer}>{cardsContent}</View>
+        <SortableGrid
+          itemsPerRow={5}
+          dragActivationTreshold={50}
+          onDragRelease={this.updateHandOrder.bind(this)}
+        >
+          {cardsContent}
+        </SortableGrid>
       </View>
     );
   }
@@ -93,12 +135,13 @@ export default class Hand extends Component {
 
 const styles = StyleSheet.create({
   playerContainer: {
-    backgroundColor: color(colors.slate).fade(0.5),
     marginBottom: 10,
+    height: 144,
   },
   nameAvatarContainer: {
     marginTop: 6,
     marginLeft: 12,
+    marginBottom: 12,
     flexDirection: 'row',
   },
   name: {
@@ -112,15 +155,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 40,
     marginRight: 12,
-  },
-  cardsContainer: {
-    height: 100,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  shipContainer: {
-    flex: 1,
-    alignItems: 'center',
   },
   shipIcon: {
     width: 60,

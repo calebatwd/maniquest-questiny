@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 
 import * as actions from '../../actions';
 
@@ -9,6 +9,8 @@ import {getCard, submitTurn} from '../../utils';
 import HandContainer from '../../containers/HandContainer';
 import BoardContainer from '../../containers/BoardContainer';
 import CommandContainer from '../../containers/CommandContainer';
+
+import earthIcon from '../../resources/img/planets/earth.png';
 
 class Game extends Component {
   giveHint(cardIds, hint, actorPlayerId) {
@@ -73,6 +75,7 @@ class Game extends Component {
     const {
       deck,
       hands,
+      gameId,
       scores,
       loggedInPlayerId,
       players,
@@ -87,6 +90,7 @@ class Game extends Component {
 
     return (
       <View style={styles.container}>
+        <Image style={styles.earthIcon} source={earthIcon} />
         <ProgressBar
           deck={deck}
           scores={scores}
@@ -100,7 +104,12 @@ class Game extends Component {
           turnPlayerId={turnPlayerId}
           loggedInPlayerId={loggedInPlayerId}
         />
-        <HandContainer hand={hands[loggedInPlayerId]} player={me} turnPlayerId={turnPlayerId} />
+        <HandContainer
+          hand={hands[loggedInPlayerId]}
+          player={me}
+          turnPlayerId={turnPlayerId}
+          gameId={gameId}
+        />
         <CommandContainer
           turnPlayerId={turnPlayerId}
           loggedInPlayerId={loggedInPlayerId}
@@ -118,5 +127,13 @@ export default Game;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  earthIcon: {
+    position: 'absolute',
+    left: -120,
+    bottom: -420,
+    width: 600,
+    height: 600,
+    transform: [{rotateX: '20deg'}],
   },
 });
