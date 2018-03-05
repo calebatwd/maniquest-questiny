@@ -19,25 +19,25 @@ class Lobby extends Component {
 
   startGame() {
     const {players, gameId} = this.props;
-    var cards = [];
+    var cardIds = [];
     const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
     const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
     planets.forEach((planet) => {
       ranks.forEach((rank) => {
-        cards.push(`${planet}_${rank}`);
+        cardIds.push(`${planet}_${rank}`);
       });
     });
 
-    cards = _.shuffle(cards);
+    cardIds = _.shuffle(cardIds);
     const shuffledPlayers = _.shuffle(players);
 
     var hands = {};
     shuffledPlayers.forEach((player) => {
-      const thisHand = cards.splice(0, 4);
+      const thisHand = cardIds.splice(0, 4);
       hands[player.id] = thisHand;
     });
 
-    submitTurn(gameId, {type: actions.SHUFFLE_DECK, cards, players: shuffledPlayers, hands});
+    submitTurn(gameId, {type: actions.SHUFFLE_DECK, cardIds, players: shuffledPlayers, hands});
   }
 
   renderPlayerList(players) {

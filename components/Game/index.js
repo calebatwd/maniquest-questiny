@@ -9,64 +9,65 @@ import * as actions from '../../actions';
 import Hand from './Hand';
 import Board from './Board';
 import ProgressBar from './ProgressBar';
-import {getCard} from '../../utils';
+import {getCard, submitTurn} from '../../utils';
 
 class Game extends Component {
   state = {};
 
-  giveHint(playerId, cards, hint) {
-    const {hands} = this.props;
-    const playerHand = hands[playerId];
+  giveHint(cardIds, hint, actorPlayerId) {
+    const {hands, gameId} = this.props;
+    const playerHand = hands[actorPlayerId];
 
     // Make sure that the cards are actually a part of that players hand
-    if (_.difference(cards, playerHand).length !== 0) {
+    if (_.difference(cardIds, playerHand).length !== 0) {
       //TODO: if false, alert
       console.log('Invalid hint. Cards were not in the target players hand');
       return;
     }
 
     // Build an array of cards that were not selected for reference
-    const nonHintedCards = _.difference(playerHand, cards);
+    const nonHintedCardIds = _.difference(playerHand, cardIds);
 
     // Make sure that the hinted cards actually possess the hint property
-    if (_.uniq(_.get(cards, hint)).length !== 1) {
+    if (_.uniq(_.get(cardIds, hint)).length !== 1) {
       //TODO: if false, alert
       console.log('Invalid hint. The cards selected did not share the hint');
       return;
     }
 
     // Since the cards share the hint property, get the property
-    const hintProperty = cards[hint];
+    const hintProperty = cardIds[hint];
 
     // Make sure that no other cards match the rule
-    if (_.find(nonHintedCards, [hint, hintProperty])) {
+    if (_.find(nonHintedCardIds, [hint, hintProperty])) {
       //TODO: if false, alert
       console.log('Invalid hint. Other cards in the players hand also contain the selected hint');
       return;
     }
 
-    this.submitTurn({type: actions.GIVE_HINT, playerId, cards, hint});
+    submitTurn(gameId, {type: actions.GIVE_HINT, actor: actorPlayerId, cardIds, hint}, hands);
   }
 
-  playCard(card) {
-    const {deck, scores} = this.props;
-    const {planet, rank} = getCard(card);
+  playCard(cardId, actorPlayerId) {
+    const {deck, hands, scores} = this.props;
+    const {planet, rank} = getCard(cardId);
 
     // Check for success
     const expected = scores[planet] + 1;
     const successful = expected.toString() == rank;
 
     // Draw a new card from the deck
-    const newCard = deck.shift();
-    this.submitTurn({type: action.PLAY_CARD, successful, card, newCard});
+    submitTurn(
+      gameId,
+      {type: action.PLAY_CARD, successful, cardId, actor: actorPlayerId},
+      {hands, deck}
+    );
   }
 
-  discardCard(card) {
+  discardCard(cardId, actorPlayerId) {
     // Draw a new card from the deck
-    const {deck} = this.props;
-    const newCard = deck.shift();
-
-    submitTurn({type: actions.DISCARD_CARD, card, newCard});
+    const {deck, hands} = this.props;
+    submitTurn(gameId, {type: actions.DISCARD_CARD, cardId, actor: actorPlayerId}, {hands, deck});
   }
 
   componentWillMount() {}

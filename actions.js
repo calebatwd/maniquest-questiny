@@ -9,6 +9,7 @@ export const GIVE_HINT = 'GIVE_HINT';
 export const DISCARD_CARD = 'DISCARD_CARD';
 export const PLAY_CARD = 'PLAY_CARD';
 export const SHUFFLE_DECK = 'SHUFFLE_DECK';
+export const UPDATE_HANDS = 'UPDATE_HANDS';
 
 export function setGameId(gameId) {
   return {
@@ -34,7 +35,10 @@ export function fetchPlayers(gameId) {
             players.push(Object.assign(playerSnapshot.val(), {id: playerSnapshot.key}));
           });
 
-          dispatch(updatePlayers(players));
+          dispatch({
+            type: UPDATE_PLAYERS,
+            players,
+          });
         },
         (error) => {
           console.log(`Error fetching players for "${gameId}" from Firebase:`, error);
@@ -43,41 +47,46 @@ export function fetchPlayers(gameId) {
   };
 }
 
-export function updatePlayers(players) {
-  return {
-    type: UPDATE_PLAYERS,
-    players,
-  };
-}
-
 export function fetchTurns(gameId, history) {
   return (dispatch) => {
-    firebase
-      .database()
-      .ref(`/games/${gameId}/turns`)
-      .on(
-        'child_added',
-        (snapshot) => {
-          const turn = snapshot.val();
+    const gameRef = firebase.database().ref(`/games/${gameId}`);
 
-          dispatch(turn);
+    gameRef.child('turns').on(
+      'child_added',
+      (snapshot) => {
+        const turn = snapshot.val();
 
-          if (turn.type == SHUFFLE_DECK) {
-            firebase
-              .database()
-              .ref(`/games/${gameId}/players`)
-              .off();
+        dispatch(turn);
 
-            history.push({
-              pathname: '/game',
-              search: `?from=lobby`,
-            });
-          }
-        },
-        (error) => {
-          console.log(`Error fetching turn for "${gameId}" from Firebase:`, error);
+        if (turn.type == SHUFFLE_DECK) {
+          firebase
+            .database()
+            .ref(`/games/${gameId}/players`)
+            .off();
+
+          history.push({
+            pathname: '/game',
+            search: `?from=lobby`,
+          });
         }
-      );
+      },
+      (error) => {
+        console.log(`Error fetching turns for "${gameId}" from Firebase:`, error);
+      }
+    );
+
+    gameRef.child('hands').on(
+      'value',
+      (snapshot) => {
+        dispatch({
+          type: UPDATE_HANDS,
+          hands: snapshot.val(),
+        });
+      },
+      (error) => {
+        console.log(`Error fetching hands for "${gameId}" from Firebase:`, error);
+      }
+    );
   };
 }
 

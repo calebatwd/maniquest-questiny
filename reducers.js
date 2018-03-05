@@ -3,7 +3,7 @@ import {combineReducers} from 'redux';
 import * as actions from './actions';
 import {getCard} from './utils';
 
-const initialDiscardedCards = {
+const initialDiscardedCardIds = {
   saturn: [],
   mars: [],
   venus: [],
@@ -70,21 +70,19 @@ const rootReducers = {
       case actions.DISCARD_CARD:
         return Math.min(8, state + 1);
       case actions.PLAY_CARD:
-        const card = getCard(action.card);
+        const card = getCard(action.cardId);
         return action.successful && card.rank === '5' ? Math.min(8, state + 1) : state;
       default:
         return state;
     }
   },
-  discardedCards: (state = initialDiscardedCards, action) => {
+  discardedCards: (state = initialDiscardedCardIds, action) => {
     switch (action.type) {
       case actions.DISCARD_CARD:
-        const {planet} = getCard(action.card);
-        return {...state, [planet]: [...state[planet], action.card]};
+        return {...state, [planet]: [...state[planet], action.cardId]};
       case actions.PLAY_CARD:
         if (!action.successful) {
-          const card = getCard(action.card);
-          return {...state, [planet]: [...state[planet], action.card]};
+          return {...state, [planet]: [...state[planet], action.cardId]};
         } else {
           return state;
         }
@@ -96,7 +94,7 @@ const rootReducers = {
     switch (action.type) {
       case actions.PLAY_CARD:
         if (action.successful) {
-          const {plannet} = getCard(action.card);
+          const {planet} = getCard(action.cardId);
           return {...state, [planet]: state[planet] + 1};
         } else {
           return state;
@@ -107,17 +105,8 @@ const rootReducers = {
   },
   hands: (state = {}, action) => {
     switch (action.type) {
-      case actions.SHUFFLE_DECK:
+      case actions.UPDATE_HANDS:
         return action.hands;
-      case actions.GIVE_HINT:
-        return state;
-      case actions.DISCARD_CARD:
-      case actions.PLAY_CARD:
-        var reducedHand = state[action.playerId].remove(action.card);
-        if (action.newCard) {
-          reducedHand.push(newCard);
-        }
-        return {...state, [action.playerId]: reducedHand};
       default:
         return state;
     }
@@ -135,16 +124,11 @@ const rootReducers = {
   deck: (state = [], action) => {
     switch (action.type) {
       case actions.SHUFFLE_DECK:
-        return action.cards;
-      case actions.DISCARD_CARD:
+        return action.cardIds;
       case actions.PLAY_CARD:
-        if (state.length > 0) {
-          const newState = Object.assign({}, state);
-          newState.remove(action.newCard);
-          return newState;
-        } else {
-          return state;
-        }
+      case actions.DISCARD_CARD:
+        // Remove the first card
+        return state.filter((cardId, i) => i !== 0);
       default:
         return state;
     }
