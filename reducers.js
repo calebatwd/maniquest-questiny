@@ -79,9 +79,11 @@ const rootReducers = {
   discardedCards: (state = initialDiscardedCardIds, action) => {
     switch (action.type) {
       case actions.DISCARD_CARD:
+        const {planet} = getCard(action.cardId);
         return {...state, [planet]: [...state[planet], action.cardId]};
       case actions.PLAY_CARD:
         if (!action.successful) {
+          const {planet} = getCard(action.cardId);
           return {...state, [planet]: [...state[planet], action.cardId]};
         } else {
           return state;

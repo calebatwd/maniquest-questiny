@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 
 import deckIcon from '../../../resources/img/deck.png';

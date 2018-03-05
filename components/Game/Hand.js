@@ -1,10 +1,8 @@
 import _ from 'lodash';
 import color from 'color';
-import React, {Component} from 'react';
+import React from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-
-import Card from './Card';
 
 import shipIcon from '../../resources/img/ship.png';
 import spacemanIcon from '../../resources/img/spaceman.png';
@@ -14,6 +12,8 @@ import venusIcon from '../../resources/img/planets/venus.png';
 import saturnIcon from '../../resources/img/planets/saturn.png';
 import jupiterIcon from '../../resources/img/planets/jupiter.png';
 import mercuryIcon from '../../resources/img/planets/mercury.png';
+
+import colors from '../../resources/colors.json';
 
 const avatars = {
   spaceman: spacemanIcon,
@@ -26,8 +26,6 @@ const planetIcons = {
   jupiter: jupiterIcon,
   mercury: mercuryIcon,
 };
-
-import colors from '../../resources/colors.json';
 
 export default ({hand, player, turnIndex}) => {
   const {name, avatar} = player;

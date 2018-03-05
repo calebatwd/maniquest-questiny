@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, Image, TouchableHighlight} from 'react-native';
 
-import * as firebase from 'firebase';
 import * as actions from '../actions';
 
 import colors from '../resources/colors.json';

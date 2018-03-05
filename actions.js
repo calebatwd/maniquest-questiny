@@ -58,7 +58,7 @@ export function fetchTurns(gameId, history) {
 
         dispatch(turn);
 
-        if (turn.type == SHUFFLE_DECK) {
+        if (turn.type === SHUFFLE_DECK) {
           firebase
             .database()
             .ref(`/games/${gameId}/players`)

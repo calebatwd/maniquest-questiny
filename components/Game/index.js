@@ -1,9 +1,7 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
-import {Link} from 'react-router-native';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import * as firebase from 'firebase';
 import * as actions from '../../actions';
 
 import Hand from './Hand';
@@ -49,24 +47,24 @@ class Game extends Component {
   }
 
   playCard(cardId, actorPlayerId) {
-    const {deck, hands, scores} = this.props;
+    const {deck, hands, scores, gameId} = this.props;
     const {planet, rank} = getCard(cardId);
 
     // Check for success
     const expected = scores[planet] + 1;
-    const successful = expected.toString() == rank;
+    const successful = expected.toString() === rank;
 
     // Draw a new card from the deck
     submitTurn(
       gameId,
-      {type: action.PLAY_CARD, successful, cardId, actor: actorPlayerId},
+      {type: actions.PLAY_CARD, successful, cardId, actor: actorPlayerId},
       {hands, deck}
     );
   }
 
   discardCard(cardId, actorPlayerId) {
     // Draw a new card from the deck
-    const {deck, hands} = this.props;
+    const {deck, hands, gameId} = this.props;
     submitTurn(gameId, {type: actions.DISCARD_CARD, cardId, actor: actorPlayerId}, {hands, deck});
   }
 
@@ -76,7 +74,6 @@ class Game extends Component {
     const {
       deck,
       hands,
-      gameId,
       scores,
       playerId,
       players,

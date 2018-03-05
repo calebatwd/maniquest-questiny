@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, {Component} from 'react';
+import React from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 
 import Card from './Card';
@@ -13,7 +13,7 @@ const avatars = {
 
 export default ({players, hands, turnIndex, playerId}) => {
   const playersContent = _.map(players, (player) => {
-    if (player.id == playerId) {
+    if (player.id === playerId) {
       return;
     }
 

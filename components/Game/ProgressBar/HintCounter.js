@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 
 import hintIcon from '../../../resources/img/hint.png';

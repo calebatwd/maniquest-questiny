@@ -1,8 +1,8 @@
 import React from 'react';
 import {Font} from 'expo';
 import {Provider} from 'react-redux';
-import {NativeRouter, Route, Link} from 'react-router-native';
-import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {NativeRouter, Route} from 'react-router-native';
 import * as firebase from 'firebase';
 
 import colors from './resources/colors.json';
