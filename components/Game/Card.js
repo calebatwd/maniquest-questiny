@@ -40,21 +40,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   planetIcon: {
-    width: 80,
-    height: 80,
+    width: 68,
+    height: 68,
   },
   saturnIcon: {
-    width: 110,
-    height: 110,
+    width: 98,
+    height: 98,
   },
   shipIcon: {
-    width: 50,
-    height: 56,
+    width: 44,
+    height: 50,
     position: 'absolute',
   },
   cardRank: {
-    fontSize: 24,
-    top: 34,
+    fontSize: 20,
     fontFamily: 'SpaceMono',
     position: 'absolute',
   },

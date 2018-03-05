@@ -1,8 +1,17 @@
 import _ from 'lodash';
+import color from 'color';
 import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, Image, StyleSheet} from 'react-native';
 
 import Card from './Card';
+
+import spacemanIcon from '../../resources/img/spaceman.png';
+
+const avatars = {
+  spaceman: spacemanIcon,
+};
+
+import colors from '../../resources/colors.json';
 
 export default ({}) => {
   // TODO: use card array passed in from props
@@ -18,23 +27,36 @@ export default ({}) => {
   });
 
   return (
-    <View style={styles.outerContainer}>
-      <Text style={styles.yourHandText}>Your Hand</Text>
-      <View style={styles.innerContainer}>{cardsContent}</View>
+    <View style={styles.playerContainer}>
+      <View style={styles.nameAvatarContainer}>
+        <Image style={styles.avatar} source={avatars.spaceman} />
+        <Text style={styles.name}>Me</Text>
+      </View>
+      <View style={styles.cardsContainer}>{cardsContent}</View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  outerContainer: {
-    alignItems: 'center',
+  playerContainer: {
+    backgroundColor: color(colors.slate).fade(0.5),
     marginBottom: 10,
   },
-  innerContainer: {
+  nameAvatarContainer: {
+    marginTop: 6,
+    marginLeft: 12,
     flexDirection: 'row',
   },
-  yourHandText: {
-    fontSize: 20,
+  name: {
+    fontSize: 28,
     fontFamily: 'SpaceMonoBold',
+  },
+  avatar: {
+    width: 48,
+    height: 40,
+    marginRight: 12,
+  },
+  cardsContainer: {
+    flexDirection: 'row',
   },
 });
