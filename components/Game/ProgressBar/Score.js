@@ -31,26 +31,15 @@ const PlanetScore = ({name, score}) => {
   );
 };
 
-export default class Score extends Component {
-  render() {
-    const scores = {
-      mars: 3,
-      venus: 2,
-      saturn: 0,
-      jupiter: 5,
-      mercury: 2,
-    };
-    return (
-      <View style={styles.planetsContainer}>
-        <PlanetScore name="mars" score={scores.mars} />
-        <PlanetScore name="venus" score={scores.venus} />
-        <PlanetScore name="saturn" score={scores.saturn} />
-        <PlanetScore name="jupiter" score={scores.jupiter} />
-        <PlanetScore name="mercury" score={scores.mercury} />
-      </View>
-    );
-  }
-}
+export default ({scores}) => (
+  <View style={styles.planetsContainer}>
+    <PlanetScore name="mars" score={scores.mars} />
+    <PlanetScore name="venus" score={scores.venus} />
+    <PlanetScore name="saturn" score={scores.saturn} />
+    <PlanetScore name="jupiter" score={scores.jupiter} />
+    <PlanetScore name="mercury" score={scores.mercury} />
+  </View>
+);
 
 const styles = StyleSheet.create({
   planetsContainer: {

@@ -30,11 +30,27 @@ class Game extends Component {
   componentWillMount() {}
 
   render() {
-    const {gameId} = this.props;
+    const {
+      deck,
+      hands,
+      gameId,
+      scores,
+      playerId,
+      playerOrder,
+      discardedCards,
+      hintsRemaining,
+      crashesRemaining,
+    } = this.props;
 
     return (
       <View style={styles.container}>
-        <ProgressBar />
+        <ProgressBar
+          deck={deck}
+          scores={scores}
+          discardedCards={discardedCards}
+          hintsRemaining={hintsRemaining}
+          crashesRemaining={crashesRemaining}
+        />
         <Board />
         <Hand />
       </View>
