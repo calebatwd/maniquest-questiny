@@ -10,6 +10,7 @@ export const getCard = (card) => {
 
 export const submitTurn = (gameId, turn, extraState) => {
   const gameRef = firebase.database().ref(`/games/${gameId}`);
+  const turnKey = gameRef.push().key;
 
   let updatedState = {};
 
@@ -27,14 +28,15 @@ export const submitTurn = (gameId, turn, extraState) => {
     const shuffledPlayers = _.shuffle(extraState.players);
 
     extraState.hands = {};
+    const numCards = Object.keys(extraState.players).length > 2 ? 4 : 5;
     shuffledPlayers.forEach((player, i) => {
       updatedState[`players/${player.id}/order`] = i;
-      const thisHand = turn.cardIds.splice(0, 4);
+      const thisHand = turn.cardIds.splice(0, numCards);
       extraState.hands[player.id] = thisHand;
     });
   }
 
-  updatedState['turns/0'] = turn;
+  updatedState[`turns/${turnKey}`] = turn;
 
   switch (turn.type) {
     case actions.PLAY_CARD:
