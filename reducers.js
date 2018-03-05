@@ -38,9 +38,8 @@ const rootReducers = {
   },
   players: (state = null, action) => {
     switch (action.type) {
-      case actions.FETCH_PLAYERS:
-        return state;
       case actions.UPDATE_PLAYERS:
+      case actions.SHUFFLE_DECK:
         return action.players;
       default:
         return state;
@@ -108,6 +107,8 @@ const rootReducers = {
   },
   hands: (state = {}, action) => {
     switch (action.type) {
+      case actions.SHUFFLE_DECK:
+        return action.hands;
       case actions.GIVE_HINT:
         return state;
       case actions.DISCARD_CARD:
@@ -121,15 +122,12 @@ const rootReducers = {
         return state;
     }
   },
-  playerOrder: (state = null, action) => {
+  turnIndex: (state = 0, action) => {
     switch (action.type) {
-      case actions.SHUFFLE_DECK:
-        return {current: 0, order: action.order};
       case actions.GIVE_HINT:
       case actions.DISCARD_CARD:
       case actions.PLAY_CARD:
-        const newCurrent = state.current + 1 % state.order;
-        return {...state, current: newCurrent};
+        return state + 1;
       default:
         return state;
     }

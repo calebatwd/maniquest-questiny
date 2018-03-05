@@ -34,10 +34,7 @@ class ChooseName extends Component {
         })
         .then((snapshot) => {
           setPlayerId(snapshot.key);
-          history.push({
-            pathname: `/lobby`,
-            search: `?playerId=${snapshot.key}}`,
-          });
+          history.push('/lobby');
         })
         .catch((error) => {
           console.log(`Error creating new game with ID "${error}":`, error);

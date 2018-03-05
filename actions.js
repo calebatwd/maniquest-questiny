@@ -29,7 +29,12 @@ export function fetchPlayers(gameId) {
       .on(
         'value',
         (snapshot) => {
-          dispatch(updatePlayers(snapshot.val()));
+          const players = [];
+          snapshot.forEach((playerSnapshot) => {
+            players.push(Object.assign(playerSnapshot.val(), {id: playerSnapshot.key}));
+          });
+
+          dispatch(updatePlayers(players));
         },
         (error) => {
           console.log(`Error fetching players for "${gameId}" from Firebase:`, error);
@@ -53,8 +58,16 @@ export function fetchTurns(gameId, history) {
       .on(
         'child_added',
         (snapshot) => {
-          dispatch(snapshot.val());
-          if (snapshot.val().type == SHUFFLE_DECK) {
+          const turn = snapshot.val();
+
+          dispatch(turn);
+
+          if (turn.type == SHUFFLE_DECK) {
+            firebase
+              .database()
+              .ref(`/games/${gameId}/players`)
+              .off();
+
             history.push({
               pathname: '/game',
               search: `?from=lobby`,

@@ -19,25 +19,25 @@ class Lobby extends Component {
 
   startGame() {
     const {players, gameId} = this.props;
-
-    if (gameId === '') {
-      // TODO: display an error if the game ID is empty or invalid
-      console.log('No game ID provided on new game screen...');
-    } else {
-      var cards = [];
-      const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
-      const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
-      planets.forEach((planet) => {
-        ranks.forEach((rank) => {
-          cards.push(`${planet}_${rank}`);
-        });
+    var cards = [];
+    const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
+    const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
+    planets.forEach((planet) => {
+      ranks.forEach((rank) => {
+        cards.push(`${planet}_${rank}`);
       });
+    });
 
-      cards = _.shuffle(cards);
-      const order = _.shuffle(_.keys(players));
+    cards = _.shuffle(cards);
+    const shuffledPlayers = _.shuffle(players);
 
-      submitTurn(gameId, {type: actions.SHUFFLE_DECK, cards, order});
-    }
+    var hands = {};
+    shuffledPlayers.forEach((player) => {
+      const thisHand = cards.splice(0, 4);
+      hands[player.id] = thisHand;
+    });
+
+    submitTurn(gameId, {type: actions.SHUFFLE_DECK, cards, players: shuffledPlayers, hands});
   }
 
   renderPlayerList(players) {
