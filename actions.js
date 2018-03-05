@@ -3,7 +3,7 @@ import * as firebase from 'firebase';
 export const SET_GAME_ID = 'SET_GAME_ID';
 export const FETCH_PLAYERS = 'FETCH_PLAYERS';
 export const UPDATE_PLAYERS = 'UPDATE_PLAYERS';
-export const SET_PLAYER_ID = 'SET_PLAYER_ID';
+export const SET_LOGGED_IN_PLAYER_ID = 'SET_LOGGED_IN_PLAYER_ID';
 
 export const GIVE_HINT = 'GIVE_HINT';
 export const DISCARD_CARD = 'DISCARD_CARD';
@@ -90,9 +90,9 @@ export function fetchTurns(gameId, history) {
   };
 }
 
-export function setPlayerId(playerId) {
+export function setLoggedInPlayerId(loggedInPlayerId) {
   return {
-    type: SET_PLAYER_ID,
-    playerId,
+    type: SET_LOGGED_IN_PLAYER_ID,
+    loggedInPlayerId,
   };
 }

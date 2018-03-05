@@ -18,7 +18,7 @@ class ChooseName extends Component {
   }
 
   addPlayer() {
-    const {history, setPlayerId, gameId} = this.props;
+    const {history, setLoggedInPlayerId, gameId} = this.props;
     const {playerName} = this.state;
 
     if (playerName === '') {
@@ -33,7 +33,7 @@ class ChooseName extends Component {
           avatar: 'spaceman',
         })
         .then((snapshot) => {
-          setPlayerId(snapshot.key);
+          setLoggedInPlayerId(snapshot.key);
           history.push('/lobby');
         })
         .catch((error) => {

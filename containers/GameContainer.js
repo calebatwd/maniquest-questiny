@@ -7,7 +7,7 @@ const mapStateToProps = (state) => ({
   hands: state.hands,
   gameId: state.gameId,
   scores: state.scores,
-  playerId: state.playerId,
+  loggedInPlayerId: state.loggedInPlayerId,
   players: state.players,
   turnIndex: state.turnIndex,
   discardedCards: state.discardedCards,

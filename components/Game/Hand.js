@@ -46,10 +46,10 @@ export default class Hand extends Component {
   }
 
   render() {
-    const {hand, player, currentPlayerId, discardCard, playCard} = this.props;
+    const {hand, player, turnPlayerId, discardCard, playCard} = this.props;
     const {name, avatar} = player;
 
-    const myTurn = player.id === currentPlayerId;
+    const myTurn = player.id === turnPlayerId;
 
     const cardsContent = _.map(hand, (card, i) => {
       const {rank, planet, hint} = card;
@@ -74,10 +74,10 @@ export default class Hand extends Component {
       return (
         <Animatable.View
           animation={this.state.selectedCard === card ? 'slideInDown' : undefined}
-          easing="linear"
+          easing="ease-in-back"
           iterationCount="infinite"
           direction="alternate"
-          duration={2000}
+          duration={3000}
           style={styles.shipContainer}
           key={i}
         >
@@ -90,16 +90,16 @@ export default class Hand extends Component {
     });
 
     const commandView = (
-      <View>
+      <View style={styles.commandContainer}>
         <TouchableHighlight
           style={styles.button}
-          onPress={() => discardCard(this.state.selectedCard, currentPlayerId)}
+          onPress={() => discardCard(this.state.selectedCard, turnPlayerId)}
         >
           <Text style={styles.buttonText}>Scuttle</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.button}
-          onPress={() => playCard(this.state.selectedCard, currentPlayerId)}
+          onPress={() => playCard(this.state.selectedCard, turnPlayerId)}
         >
           <Text style={styles.buttonText}>Launch</Text>
         </TouchableHighlight>
@@ -208,5 +208,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: colors.white,
+  },
+  commandContainer: {
+    position: 'absolute',
+    bottom: 150,
+    alignSelf: 'center',
   },
 });

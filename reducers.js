@@ -28,10 +28,10 @@ const rootReducers = {
         return state;
     }
   },
-  playerId: (state = null, action) => {
+  loggedInPlayerId: (state = null, action) => {
     switch (action.type) {
-      case actions.SET_PLAYER_ID:
-        return action.playerId;
+      case actions.SET_LOGGED_IN_PLAYER_ID:
+        return action.loggedInPlayerId;
       default:
         return state;
     }

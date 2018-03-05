@@ -75,7 +75,7 @@ class Game extends Component {
       deck,
       hands,
       scores,
-      playerId,
+      loggedInPlayerId,
       players,
       discardedCards,
       hintsRemaining,
@@ -83,10 +83,9 @@ class Game extends Component {
       turnIndex,
     } = this.props;
 
-    console.log('HANDSTATE', hands);
-
-    const me = _.find(players, ['id', playerId]);
-    const currentPlayerId = players[turnIndex % players.length].id;
+    const me = _.find(players, ['id', loggedInPlayerId]);
+    const turnPlayerId = players[turnIndex % players.length].id;
+    console.log('PLAYERINFO', players, loggedInPlayerId, me, turnPlayerId);
 
     return (
       <View style={styles.container}>
@@ -100,13 +99,13 @@ class Game extends Component {
         <Board
           players={players}
           hands={hands}
-          currentPlayerId={currentPlayerId}
-          playerId={playerId}
+          turnPlayerId={turnPlayerId}
+          loggedInPlayerId={loggedInPlayerId}
         />
         <Hand
-          hand={hands[playerId]}
+          hand={hands[loggedInPlayerId]}
           player={me}
-          currentPlayerId={currentPlayerId}
+          turnPlayerId={turnPlayerId}
           discardCard={this.discardCard.bind(this)}
           playCard={this.playCard.bind(this)}
         />

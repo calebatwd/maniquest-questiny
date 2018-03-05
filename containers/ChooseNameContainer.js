@@ -2,12 +2,12 @@ import {connect} from 'react-redux';
 
 import ChooseName from '../components/ChooseName';
 
-import {setPlayerId} from '../actions';
+import {setLoggedInPlayerId} from '../actions';
 
 const mapStateToProps = ({gameId}) => ({gameId});
 
 const mapDispatchToProps = (dispatch) => ({
-  setPlayerId: (playerId) => dispatch(setPlayerId(playerId)),
+  setLoggedInPlayerId: (loggedInPlayerId) => dispatch(setLoggedInPlayerId(loggedInPlayerId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseName);
