@@ -11,8 +11,6 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
-import Card from './Card';
-
 import shipIcon from '../../resources/img/ship.png';
 import spacemanIcon from '../../resources/img/spaceman.png';
 
@@ -21,6 +19,8 @@ import venusIcon from '../../resources/img/planets/venus.png';
 import saturnIcon from '../../resources/img/planets/saturn.png';
 import jupiterIcon from '../../resources/img/planets/jupiter.png';
 import mercuryIcon from '../../resources/img/planets/mercury.png';
+
+import colors from '../../resources/colors.json';
 
 const avatars = {
   spaceman: spacemanIcon,
@@ -34,14 +34,11 @@ const planetIcons = {
   mercury: mercuryIcon,
 };
 
-import colors from '../../resources/colors.json';
-
 export default class Hand extends Component {
   state = {};
-  handleTextRef = (ref) => (this.text = ref);
 
   toggleSelect(card) {
-    if (this.state.selectedCard == card) {
+    if (this.state.selectedCard === card) {
       this.setState({selectedCard: null});
     } else {
       this.setState({selectedCard: card});
@@ -52,7 +49,7 @@ export default class Hand extends Component {
     const {hand, player, currentPlayerId, discardCard, playCard} = this.props;
     const {name, avatar} = player;
 
-    const myTurn = player.id == currentPlayerId;
+    const myTurn = player.id === currentPlayerId;
 
     const cardsContent = _.map(hand, (card, i) => {
       const {rank, planet, hint} = card;
@@ -76,7 +73,7 @@ export default class Hand extends Component {
 
       return (
         <Animatable.View
-          animation={this.state.selectedCard == card ? 'slideInDown' : undefined}
+          animation={this.state.selectedCard === card ? 'slideInDown' : undefined}
           easing="linear"
           iterationCount="infinite"
           direction="alternate"
@@ -96,11 +93,14 @@ export default class Hand extends Component {
       <View>
         <TouchableHighlight
           style={styles.button}
-          onPress={() => discardCard(this.state.selectedCard)}
+          onPress={() => discardCard(this.state.selectedCard, currentPlayerId)}
         >
           <Text style={styles.buttonText}>Scuttle</Text>
         </TouchableHighlight>
-        <TouchableHighlight style={styles.button} onPress={() => playCard(this.state.selectedCard)}>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => playCard(this.state.selectedCard, currentPlayerId)}
+        >
           <Text style={styles.buttonText}>Launch</Text>
         </TouchableHighlight>
       </View>

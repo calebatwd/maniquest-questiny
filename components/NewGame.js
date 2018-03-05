@@ -1,12 +1,10 @@
-import _ from 'lodash';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-native';
 import {StyleSheet, Text, View, TextInput, ScrollView, TouchableHighlight} from 'react-native';
 
 import colors from '../resources/colors.json';
-import * as actions from '../actions';
 
 class NewGame extends Component {
   state = {gameId: ''};

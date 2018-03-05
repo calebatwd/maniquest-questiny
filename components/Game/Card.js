@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
 
 import shipIcon from '../../resources/img/ship.png';
@@ -7,8 +7,6 @@ import venusIcon from '../../resources/img/planets/venus.png';
 import saturnIcon from '../../resources/img/planets/saturn.png';
 import jupiterIcon from '../../resources/img/planets/jupiter.png';
 import mercuryIcon from '../../resources/img/planets/mercury.png';
-
-import colors from '../../resources/colors.json';
 
 const planetIcons = {
   mars: marsIcon,

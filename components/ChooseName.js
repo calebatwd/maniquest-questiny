@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import queryString from 'query-string';
 import React, {Component} from 'react';
 import {withRouter} from 'react-router';
