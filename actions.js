@@ -45,7 +45,7 @@ export function updatePlayers(players) {
   };
 }
 
-export function fetchTurns(gameId) {
+export function fetchTurns(gameId, history) {
   return (dispatch) => {
     firebase
       .database()
@@ -54,6 +54,12 @@ export function fetchTurns(gameId) {
         'child_added',
         (snapshot) => {
           dispatch(snapshot.val());
+          if (snapshot.val().type == SHUFFLE_DECK) {
+            history.push({
+              pathname: '/game',
+              search: `?from=lobby`,
+            });
+          }
         },
         (error) => {
           console.log(`Error fetching turn for "${gameId}" from Firebase:`, error);
