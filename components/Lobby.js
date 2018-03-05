@@ -12,9 +12,9 @@ import {submitTurn} from '../utils';
 
 class Lobby extends Component {
   componentWillMount() {
-    const {fetchPlayers, fetchTurns, gameId} = this.props;
+    const {fetchPlayers, fetchTurns, gameId, history} = this.props;
     fetchPlayers(gameId);
-    fetchTurns(gameId);
+    fetchTurns(gameId, history);
   }
 
   startGame() {

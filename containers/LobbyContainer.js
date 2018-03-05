@@ -15,7 +15,7 @@ const mapStateToProps = ({isFetchingPlayers, gameId, players}) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchPlayers: (gameId) => dispatch(fetchPlayers(gameId)),
-  fetchTurns: (gameId) => dispatch(fetchTurns(gameId)),
+  fetchTurns: (gameId, history) => dispatch(fetchTurns(gameId, history)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lobby);
