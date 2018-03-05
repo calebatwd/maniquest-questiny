@@ -1,7 +1,14 @@
 import _ from 'lodash';
 import color from 'color';
 import React, {Component} from 'react';
-import {Text, View, Image, StyleSheet} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import Card from './Card';
@@ -29,53 +36,88 @@ const planetIcons = {
 
 import colors from '../../resources/colors.json';
 
-export default ({hand, player, turnIndex}) => {
-  const {name, avatar} = player;
-  const cardsContent = _.map(hand, ({rank, planet, hint}, i) => {
-    let hintContent;
-    if (hint === 'planet') {
-      hintContent = <Image style={styles.hintIcon} source={planetIcons[planet]} />;
-    } else if (hint === 'rank') {
-      hintContent = (
-        <View style={styles.hintTextContainer}>
-          <Text style={styles.hintText}>{rank}</Text>
-        </View>
-      );
-    } else if (hint === 'both') {
-      hintContent = (
-        <View style={styles.hintContainerBoth}>
-          <Image style={styles.hintIconBoth} source={planetIcons[planet]} />
-          <Text style={styles.hintTextBoth}>{rank}</Text>
-        </View>
-      );
+export default class Hand extends Component {
+  state = {};
+  handleTextRef = (ref) => (this.text = ref);
+
+  toggleSelect(card) {
+    if (this.state.selectedCard == card) {
+      this.setState({selectedCard: null});
+    } else {
+      this.setState({selectedCard: card});
     }
+  }
+
+  render() {
+    const {hand, player, currentPlayerId, discardCard, playCard} = this.props;
+    const {name, avatar} = player;
+
+    const myTurn = player.id == currentPlayerId;
+
+    const cardsContent = _.map(hand, (card, i) => {
+      const {rank, planet, hint} = card;
+      let hintContent;
+      if (hint === 'planet') {
+        hintContent = <Image style={styles.hintIcon} source={planetIcons[planet]} />;
+      } else if (hint === 'rank') {
+        hintContent = (
+          <View style={styles.hintTextContainer}>
+            <Text style={styles.hintText}>{rank}</Text>
+          </View>
+        );
+      } else if (hint === 'both') {
+        hintContent = (
+          <View style={styles.hintContainerBoth}>
+            <Image style={styles.hintIconBoth} source={planetIcons[planet]} />
+            <Text style={styles.hintTextBoth}>{rank}</Text>
+          </View>
+        );
+      }
+
+      return (
+        <Animatable.View
+          animation={this.state.selectedCard == card ? 'slideInDown' : undefined}
+          easing="linear"
+          iterationCount="infinite"
+          direction="alternate"
+          duration={2000}
+          style={styles.shipContainer}
+          key={i}
+        >
+          {hintContent}
+          <TouchableWithoutFeedback onPress={() => this.toggleSelect(card)}>
+            <Image style={styles.shipIcon} source={shipIcon} />
+          </TouchableWithoutFeedback>
+        </Animatable.View>
+      );
+    });
+
+    const commandView = (
+      <View>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => discardCard(this.state.selectedCard)}
+        >
+          <Text style={styles.buttonText}>Scuttle</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.button} onPress={() => playCard(this.state.selectedCard)}>
+          <Text style={styles.buttonText}>Launch</Text>
+        </TouchableHighlight>
+      </View>
+    );
 
     return (
-      <Animatable.View
-        animation="pulse"
-        easing="linear"
-        iterationCount="infinite"
-        direction="alternate"
-        duration={2500}
-        style={styles.shipContainer}
-        key={i}
-      >
-        {hintContent}
-        <Image style={styles.shipIcon} source={shipIcon} />
-      </Animatable.View>
-    );
-  });
-
-  return (
-    <View style={styles.playerContainer}>
-      <View style={styles.nameAvatarContainer}>
-        <Image style={styles.avatar} source={avatars[avatar]} />
-        <Text style={styles.name}>{name}</Text>
+      <View style={styles.playerContainer}>
+        {this.state.selectedCard && myTurn && commandView}
+        <View style={styles.nameAvatarContainer}>
+          <Image style={styles.avatar} source={avatars[avatar]} />
+          <Text style={[styles.name, myTurn && styles.nameHighlight]}>{name}</Text>
+        </View>
+        <View style={styles.cardsContainer}>{cardsContent}</View>
       </View>
-      <View style={styles.cardsContainer}>{cardsContent}</View>
-    </View>
-  );
-};
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   playerContainer: {
@@ -90,6 +132,9 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 28,
     fontFamily: 'SpaceMonoBold',
+  },
+  nameHighlight: {
+    color: 'red',
   },
   avatar: {
     width: 48,
@@ -150,5 +195,18 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.white,
     fontFamily: 'SpaceMonoBold',
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: colors.orange,
+    padding: 10,
+    margin: 16,
+    width: 200,
+    height: 60,
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 20,
+    color: colors.white,
   },
 });

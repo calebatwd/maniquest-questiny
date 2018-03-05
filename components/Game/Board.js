@@ -11,11 +11,13 @@ const avatars = {
   spaceman: spacemanIcon,
 };
 
-export default ({players, hands, turnIndex, playerId}) => {
+export default ({players, hands, currentPlayerId, playerId}) => {
   const playersContent = _.map(players, (player) => {
     if (player.id == playerId) {
       return;
     }
+
+    const turn = currentPlayerId == playerId;
 
     const cardsContent = _.map(hands[player.id], (card, i) => {
       const {planet, rank} = getCard(card);
@@ -26,7 +28,7 @@ export default ({players, hands, turnIndex, playerId}) => {
       <View style={styles.playerContainer} key={player.name}>
         <View style={styles.playerNameAvatarContainer}>
           <Image style={styles.playerAvatar} source={avatars[player.avatar]} />
-          <Text style={styles.playerName}>{player.name}</Text>
+          <Text style={[styles.playerName, turn && styles.playerNameHighlight]}>{player.name}</Text>
         </View>
         <View style={styles.playerCardsContainer}>{cardsContent}</View>
       </View>
@@ -54,6 +56,9 @@ const styles = StyleSheet.create({
   playerName: {
     fontSize: 28,
     fontFamily: 'SpaceMonoBold',
+  },
+  playerNameHighlight: {
+    color: 'red',
   },
   playerAvatar: {
     width: 48,

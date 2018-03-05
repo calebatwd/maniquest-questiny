@@ -9,7 +9,7 @@ import * as actions from '../../actions';
 import Hand from './Hand';
 import Board from './Board';
 import ProgressBar from './ProgressBar';
-import {getCard} from '../../utils';
+import {getCard, submitTurn} from '../../utils';
 
 class Game extends Component {
   state = {};
@@ -45,7 +45,7 @@ class Game extends Component {
       return;
     }
 
-    this.submitTurn({type: actions.GIVE_HINT, playerId, cards, hint});
+    submitTurn({type: actions.GIVE_HINT, playerId, cards, hint});
   }
 
   playCard(card) {
@@ -58,7 +58,7 @@ class Game extends Component {
 
     // Draw a new card from the deck
     const newCard = deck.shift();
-    this.submitTurn({type: action.PLAY_CARD, successful, card, newCard});
+    submitTurn({type: action.PLAY_CARD, successful, card, newCard});
   }
 
   discardCard(card) {
@@ -85,7 +85,10 @@ class Game extends Component {
       turnIndex,
     } = this.props;
 
-    const currentPlayer = _.find(players, ['id', playerId]);
+    const me = _.find(players, ['id', playerId]);
+    const currentPlayerId = players[turnIndex % players.length].id;
+
+    console.log(me, currentPlayerId);
 
     return (
       <View style={styles.container}>
@@ -96,8 +99,19 @@ class Game extends Component {
           hintsRemaining={hintsRemaining}
           crashesRemaining={crashesRemaining}
         />
-        <Board players={players} hands={hands} turnIndex={turnIndex} playerId={playerId} />
-        <Hand hand={hands[playerId]} player={currentPlayer} turnIndex={turnIndex} />
+        <Board
+          players={players}
+          hands={hands}
+          currentPlayerId={currentPlayerId}
+          playerId={playerId}
+        />
+        <Hand
+          hand={hands[playerId]}
+          player={me}
+          currentPlayerId={currentPlayerId}
+          discardCard={this.discardCard.bind(this)}
+          playCard={this.playCard.bind(this)}
+        />
       </View>
     );
   }
