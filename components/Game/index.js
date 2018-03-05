@@ -83,12 +83,10 @@ class Game extends Component {
       turnIndex,
     } = this.props;
 
-    console.log(hands);
+    console.log('HANDSTATE', hands);
 
     const me = _.find(players, ['id', playerId]);
     const currentPlayerId = players[turnIndex % players.length].id;
-
-    console.log(me, currentPlayerId);
 
     return (
       <View style={styles.container}>

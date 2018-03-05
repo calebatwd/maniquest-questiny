@@ -28,15 +28,8 @@ class Lobby extends Component {
     });
 
     cardIds = _.shuffle(cardIds);
-    const shuffledPlayers = _.shuffle(players);
 
-    var hands = {};
-    shuffledPlayers.forEach((player) => {
-      const thisHand = cardIds.splice(0, 4);
-      hands[player.id] = thisHand;
-    });
-
-    submitTurn(gameId, {type: actions.SHUFFLE_DECK, cardIds, players: shuffledPlayers}, {hands});
+    submitTurn(gameId, {type: actions.SHUFFLE_DECK, cardIds}, {players});
   }
 
   renderPlayerList(players) {

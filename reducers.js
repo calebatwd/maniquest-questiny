@@ -39,7 +39,6 @@ const rootReducers = {
   players: (state = null, action) => {
     switch (action.type) {
       case actions.UPDATE_PLAYERS:
-      case actions.SHUFFLE_DECK:
         return action.players;
       default:
         return state;

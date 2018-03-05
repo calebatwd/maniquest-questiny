@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import _ from 'lodash';
 
 import * as actions from './actions';
 
@@ -10,38 +11,55 @@ export const getCard = (card) => {
 export const submitTurn = (gameId, turn, extraState) => {
   const gameRef = firebase.database().ref(`/games/${gameId}`);
 
-  const addTurnPromise = gameRef
-    .child('turns')
-    .push(turn)
-    .catch((error) => {
-      console.log(`Error pushing turn for game "${gameId}" to Firebase:`, error);
+  let updatedState = {};
+
+  if (turn.type === actions.SHUFFLE_DECK) {
+    var cardIds = [];
+    const planets = ['jupiter', 'mars', 'mercury', 'saturn', 'venus'];
+    const ranks = ['1_1', '1_2', '1_3', '2_1', '2_2', '3_1', '3_2', '4_1', '4_2', '5_1'];
+    planets.forEach((planet) => {
+      ranks.forEach((rank) => {
+        cardIds.push(`${planet}_${rank}`);
+      });
     });
 
-  let updatedHands;
+    turn.cardIds = _.shuffle(cardIds);
+    const shuffledPlayers = _.shuffle(extraState.players);
+
+    extraState.hands = {};
+    shuffledPlayers.forEach((player, i) => {
+      updatedState[`players/${player.id}/order`] = i;
+      const thisHand = turn.cardIds.splice(0, 4);
+      extraState.hands[player.id] = thisHand;
+    });
+  }
+
+  updatedState['turns/0'] = turn;
+
   switch (turn.type) {
     case actions.PLAY_CARD:
     case actions.DISCARD_CARD:
-      updatedHands = extraState.hands;
-      updatedHands[turn.actor].remove(turn.cardId);
-      updatedHands[turn.actor].append(extraState.deck.shift());
+      console.log('FOO:', turn, extraState);
+
+      let newHands = extraState.hands;
+      console.log('A:', newHands);
+      console.log('A:', newHands[turn.actor]);
+      const oldCardIndex = newHands[turn.actor].indexOf(turn.cardId);
+      newHands[turn.actor].splice(oldCardIndex, 1);
+      console.log('B:', newHands);
+      newHands[turn.actor].push(extraState.deck.shift());
+      console.log('C:', newHands);
+
+      updatedState['hands'] = newHands;
       break;
     case actions.SHUFFLE_DECK:
-      updatedHands = extraState.hands;
+      updatedState['hands'] = extraState.hands;
       break;
     default:
       break;
   }
 
-  let updateHandsPromise = Promise.resolve();
-  if (typeof updatedHands !== 'undefined') {
-    updateHandsPromise = gameRef
-      .child('hands')
-      .set(updatedHands)
-      .catch((error) => {
-        console.log(`Error setting hands for game "${gameId}" to Firebase:`, error);
-      });
-  }
-
-  if (turn.type === actions.SHUFFLE_DECK) {
-  } else if (turn.type === '') return Promise.all([addTurnPromise, updateHandsPromise]);
+  return gameRef.update(updatedState).catch((error) => {
+    console.log(`Error updating state for game "${gameId}" to Firebase:`, error);
+  });
 };
