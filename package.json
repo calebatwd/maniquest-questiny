@@ -35,7 +35,8 @@
     "react": "16.2.0",
     "react-native": "0.52.0",
     "react-native-animatable": "^1.2.4",
-    "react-native-sortable-grid": "^2.0.0",
+    "react-native-sortable-grid":
+      "ollija/react-native-sortable-grid#208ef32a261f1c7429d0559bb3aad91d929f8e31",
     "react-redux": "^5.0.7",
     "react-router-native": "^4.2.0",
     "redux": "^3.7.2",
