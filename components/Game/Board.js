@@ -23,9 +23,9 @@ export default class Hand extends Component {
       selectCardToHint,
     } = this.props;
     const playersContent = _.map(players, (player) => {
-      if (player.id === loggedInPlayerId) {
-        return;
-      }
+      // if (player.id === loggedInPlayerId) {
+      //   return;
+      // }
 
       const isPlayersTurn = turnPlayerId === player.id;
 
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     marginBottom: 12,
+    maxHeight: 156,
   },
   playerNameAvatarContainer: {
     paddingLeft: 12,

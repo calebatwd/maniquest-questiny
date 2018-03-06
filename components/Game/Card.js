@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
     height: 68,
   },
   planetHinted: {
-    shadowOpacity: 0.75,
-    shadowRadius: 5,
+    shadowOpacity: 1,
+    shadowRadius: 3,
     shadowColor: colors.orange,
     shadowOffset: {height: 0, width: 0},
   },

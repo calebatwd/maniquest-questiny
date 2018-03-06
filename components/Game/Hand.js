@@ -73,7 +73,7 @@ export default class Hand extends Component {
 
   render() {
     const {selectedCardIds} = this.state;
-    const {hand, player, turnPlayerId} = this.props;
+    const {hand, player, turnPlayerId, selectedCardToPlay, selectCardToPlay} = this.props;
     const {name, avatar} = player;
 
     const myTurn = player.id === turnPlayerId;
@@ -82,7 +82,9 @@ export default class Hand extends Component {
       const {rank, planet} = getCard(cardId);
       let hintContent;
       if (hint === 'planet') {
-        hintContent = <Image style={styles.hintIcon} source={planetIcons[planet]} />;
+        hintContent = (
+          <Image style={[styles.hintIcon, styles.shadow]} source={planetIcons[planet]} />
+        );
       } else if (hint === 'rank') {
         hintContent = (
           <View style={styles.hintTextContainer}>
@@ -92,13 +94,13 @@ export default class Hand extends Component {
       } else if (hint === 'both') {
         hintContent = (
           <View style={styles.hintContainerBoth}>
-            <Image style={styles.hintIconBoth} source={planetIcons[planet]} />
+            <Image style={[styles.hintIconBoth, styles.shadow]} source={planetIcons[planet]} />
             <Text style={styles.hintTextBoth}>{rank}</Text>
           </View>
         );
       }
 
-      const isCardSelected = _.includes(selectedCardIds, cardId);
+      const isCardSelected = selectedCardToPlay === cardId; // _.includes(selectedCardIds, cardId);
       const shipBounceAnimation = {
         0: {
           translateY: 0,
@@ -119,7 +121,7 @@ export default class Hand extends Component {
           direction="alternate"
           easing="ease-in-out"
           iterationCount="infinite"
-          onTap={() => this.toggleCardSelected(cardId)}
+          onTap={() => selectCardToPlay(cardId)}
           key={cardId}
         >
           {hintContent}
@@ -232,5 +234,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 150,
     alignSelf: 'center',
+  },
+  shadow: {
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    shadowColor: colors.orange,
+    shadowOffset: {height: 0, width: 0},
   },
 });

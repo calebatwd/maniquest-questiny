@@ -65,8 +65,8 @@ export const submitTurn = (gameId, turn, extraState) => {
     case actions.GIVE_HINT:
       const {targetPlayerId, cardIds, hint} = turn;
       extraState.hands[targetPlayerId].forEach((cardInHand) => {
-        if (cardIds.includes(cardInHand.id)) {
-          extraState.hands[targetPlayerId].hint = hint;
+        if (cardIds.includes(cardInHand.cardId)) {
+          cardInHand.hint = hint;
         }
       });
 

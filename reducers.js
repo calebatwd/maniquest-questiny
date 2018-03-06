@@ -126,10 +126,6 @@ const rootReducers = {
     switch (action.type) {
       case actions.SHUFFLE_DECK:
         return action.cardIds;
-      case actions.PLAY_CARD:
-      case actions.DISCARD_CARD:
-        // Remove the first card
-        return state.filter((cardId, i) => i !== 0);
       default:
         return state;
     }
