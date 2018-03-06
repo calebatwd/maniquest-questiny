@@ -2,7 +2,7 @@ import _ from 'lodash';
 import color from 'color';
 import * as firebase from 'firebase';
 import React, {Component} from 'react';
-import {Text, View, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, Image, StyleSheet} from 'react-native';
 import SortableGrid from 'react-native-sortable-grid';
 import * as Animatable from 'react-native-animatable';
 
@@ -32,11 +32,20 @@ const planetIcons = {
 };
 
 export default class Hand extends Component {
-  state = {};
+  state = {
+    selectedCardIds: [],
+  };
 
-  toggleSelect(cardId) {
+  toggleCardSelected(cardId) {
+    let {selectedCardIds} = this.state;
+    if (_.includes(selectedCardIds, cardId)) {
+      selectedCardIds = selectedCardIds.filter((id) => id !== cardId);
+    } else {
+      selectedCardIds.push(cardId);
+    }
+
     this.setState({
-      selectedCardId: this.state.selectedCardId === cardId ? null : cardId,
+      selectedCardIds,
     });
   }
 
@@ -63,7 +72,8 @@ export default class Hand extends Component {
   }
 
   render() {
-    const {hand, player, turnPlayerId, selectedCardToPlay, selectCardToPlay} = this.props;
+    const {selectedCardIds} = this.state;
+    const {hand, player, turnPlayerId} = this.props;
     const {name, avatar} = player;
 
     const myTurn = player.id === turnPlayerId;
@@ -88,32 +98,33 @@ export default class Hand extends Component {
         );
       }
 
-      // return (
-      //   <Animatable.View
-      //     animation={selectedCardToPlay === cardId ? 'slideInDown' : undefined}
-      //     easing="ease-in-back"
-      //     iterationCount="infinite"
-      //     direction="alternate"
-      //     duration={3000}
-      //     style={styles.shipContainer}
-      //     key={cardId}
-      //   >
-      //     {hintContent}
-      //     <TouchableWithoutFeedback onPress={() =>  selectCardToPlay(cardId)}>
-      //       <Image style={styles.shipIcon} source={shipIcon} />
-      //     </TouchableWithoutFeedback>
-      //   </Animatable.View>
-      // );
+      const isCardSelected = _.includes(selectedCardIds, cardId);
+      const shipBounceAnimation = {
+        0: {
+          translateY: 0,
+        },
+        0.5: {
+          translateY: -20,
+        },
+        1: {
+          translateY: 0,
+        },
+      };
 
       return (
-        <View key={cardId}>
-          <TouchableWithoutFeedback onPress={() => selectCardToPlay(cardId)}>
-            <View>
-              {hintContent}
-              <Image style={styles.shipIcon} source={shipIcon} />
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
+        <Animatable.View
+          animation={isCardSelected ? shipBounceAnimation : undefined}
+          delay={0}
+          duration={2000}
+          direction="alternate"
+          easing="ease-in-out"
+          iterationCount="infinite"
+          onTap={() => this.toggleCardSelected(cardId)}
+          key={cardId}
+        >
+          {hintContent}
+          <Image style={styles.shipIcon} source={shipIcon} />
+        </Animatable.View>
       );
     });
 
@@ -125,7 +136,7 @@ export default class Hand extends Component {
         </View>
         <SortableGrid
           itemsPerRow={5}
-          dragActivationTreshold={50}
+          dragActivationTreshold={200}
           onDragRelease={this.updateHandOrder.bind(this)}
         >
           {cardsContent}
