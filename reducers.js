@@ -151,7 +151,7 @@ const rootReducers = {
     switch (action.type) {
       case actions.SELECT_HINT:
         const {selectedHint} = action;
-        if (selectedHint.playerId !== state.player) {
+        if (selectedHint.playerId !== state.playerId) {
           // This new hint isn't intended for the previously targeted player
           return {playerId: selectedHint.playerId, cardIds: [selectedHint.cardId]};
         } else if (state.cardIds.includes(selectedHint.cardId)) {
@@ -164,7 +164,7 @@ const rootReducers = {
           // This new hint is for the targeted player and is a new card to show
           return {
             playerId: selectedHint.playerId,
-            cardIds: [...state.cards, selectedHint.cardId],
+            cardIds: [...state.cardIds, selectedHint.cardId],
           };
         }
       case actions.SELECT_CARD_TO_PLAY:

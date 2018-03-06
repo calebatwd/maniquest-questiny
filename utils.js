@@ -41,7 +41,13 @@ export const submitTurn = (gameId, turn, extraState) => {
     const numCards = Object.keys(extraState.players).length > 2 ? 4 : 5;
     shuffledPlayers.forEach((player, i) => {
       updatedState[`players/${player.id}/order`] = i;
-      const thisHand = turn.cardIds.splice(0, numCards);
+      const cardsForHand = turn.cardIds.splice(0, numCards);
+
+      const thisHand = [];
+      cardsForHand.forEach((cardId) => {
+        thisHand.push({cardId});
+      });
+
       extraState.hands[player.id] = thisHand;
     });
   }
@@ -52,11 +58,19 @@ export const submitTurn = (gameId, turn, extraState) => {
     case actions.PLAY_CARD:
     case actions.DISCARD_CARD:
       let newHands = extraState.hands;
-      const oldCardIndex = newHands[turn.actor].indexOf(turn.cardId);
-      newHands[turn.actor].splice(oldCardIndex, 1);
-      newHands[turn.actor].push(extraState.deck.shift());
-
+      newHands[turn.actor] = _.remove(newHands[turn.actor], (card) => card.cardId !== turn.cardId);
+      newHands[turn.actor].push({cardId: extraState.deck.shift()});
       updatedState['hands'] = newHands;
+      break;
+    case actions.GIVE_HINT:
+      const {targetPlayerId, cardIds, hint} = turn;
+      extraState.hands[targetPlayerId].forEach((cardInHand) => {
+        if (cardIds.includes(cardInHand.id)) {
+          extraState.hands[targetPlayerId].hint = hint;
+        }
+      });
+
+      updatedState['hands'] = extraState.hands;
       break;
     case actions.SHUFFLE_DECK:
       updatedState['hands'] = extraState.hands;

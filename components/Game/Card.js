@@ -8,6 +8,8 @@ import saturnIcon from '../../resources/img/planets/saturn.png';
 import jupiterIcon from '../../resources/img/planets/jupiter.png';
 import mercuryIcon from '../../resources/img/planets/mercury.png';
 
+import colors from '../../resources/colors.json';
+
 const planetIcons = {
   mars: marsIcon,
   venus: venusIcon,
@@ -16,17 +18,23 @@ const planetIcons = {
   mercury: mercuryIcon,
 };
 
-export default ({rank, planet, selected}) => {
+export default ({rank, planet, selected, hint}) => {
   const planetIconStyles = [styles.planetIcon];
   if (planet === 'saturn') {
     planetIconStyles.push(styles.saturnIcon);
   }
 
+  const planetHinted = hint === 'planet' || hint === 'both';
+  const rankHinted = hint === 'rank' || rank === 'both';
+
   return (
     <View style={[styles.cardContainer, selected && styles.selectedCard]}>
-      <Image style={planetIconStyles} source={planetIcons[planet]} />
+      <Image
+        style={[planetIconStyles, planetHinted && styles.planetHinted]}
+        source={planetIcons[planet]}
+      />
       <Image style={styles.shipIcon} source={shipIcon} />
-      <Text style={styles.cardRank}>{rank}</Text>
+      <Text style={[styles.cardRank, rankHinted && styles.rankHinted]}>{rank}</Text>
     </View>
   );
 };
@@ -46,6 +54,12 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
   },
+  planetHinted: {
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: colors.orange,
+    shadowOffset: {height: 0, width: 0},
+  },
   saturnIcon: {
     width: 98,
     height: 98,
@@ -59,5 +73,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'SpaceMono',
     position: 'absolute',
+  },
+  rankHinted: {
+    fontFamily: 'SpaceMonoBold',
+    color: colors.orange,
   },
 });

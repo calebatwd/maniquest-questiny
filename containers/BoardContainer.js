@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 
 import Board from '../components/Game/Board';
 
-import {selectHint} from '../actions';
+import {selectCardToHint} from '../actions';
 
 const mapStateToProps = ({selectedHint}) => {
   return {
@@ -11,7 +11,7 @@ const mapStateToProps = ({selectedHint}) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  selectHint: (selectedHint) => dispatch(selectHint(selectedHint)),
+  selectCardToHint: (selectedHint) => dispatch(selectCardToHint(selectedHint)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);

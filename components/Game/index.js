@@ -13,38 +13,53 @@ import CommandContainer from '../../containers/CommandContainer';
 import earthIcon from '../../resources/img/planets/earth.png';
 
 class Game extends Component {
-  giveHint(cardIds, hint, actorPlayerId) {
+  giveHint(cardIds, hint, targetPlayerId, actorPlayerId) {
     const {hands, gameId} = this.props;
-    const playerHand = hands[actorPlayerId];
+    const playerCardIds = hands[targetPlayerId].map((c) => c.cardId);
 
     // Make sure that the cards are actually a part of that players hand
-    if (_.difference(cardIds, playerHand).length !== 0) {
+    if (_.difference(cardIds, playerCardIds).length !== 0) {
       //TODO: if false, alert
       console.log('Invalid hint. Cards were not in the target players hand');
       return;
     }
 
     // Build an array of cards that were not selected for reference
-    const nonHintedCardIds = _.difference(playerHand, cardIds);
+    const nonHintedCardIds = _.difference(playerCardIds, cardIds);
 
     // Make sure that the hinted cards actually possess the hint property
-    if (_.uniq(_.get(cardIds, hint)).length !== 1) {
+    if (_.uniq(cardIds.map((id) => getCard(id).planet)).length !== 1) {
       //TODO: if false, alert
       console.log('Invalid hint. The cards selected did not share the hint');
       return;
     }
 
     // Since the cards share the hint property, get the property
-    const hintProperty = cardIds[hint];
+    const {planet, rank} = getCard(cardIds[0]);
 
     // Make sure that no other cards match the rule
-    if (_.find(nonHintedCardIds, [hint, hintProperty])) {
-      //TODO: if false, alert
-      console.log('Invalid hint. Other cards in the players hand also contain the selected hint');
-      return;
-    }
+    nonHintedCardIds.forEach((nonHintedCardId) => {
+      const nonHintedCard = getCard(nonHintedCardId);
+      if (hint === 'planet' && nonHintedCard.planet === planet) {
+        //TODO: if false, alert
+        console.log(
+          'Invalid hint. Other cards in the players hand also contain the selected planet hint'
+        );
+        return;
+      } else if (hint === 'rank' && nonHintedCard.rank === rank) {
+        //TODO: if false, alert
+        console.log(
+          'Invalid hint. Other cards in the players hand also contain the selected rank hint'
+        );
+        return;
+      }
+    });
 
-    submitTurn(gameId, {type: actions.GIVE_HINT, actor: actorPlayerId, cardIds, hint}, {hands});
+    submitTurn(
+      gameId,
+      {type: actions.GIVE_HINT, actor: actorPlayerId, targetPlayerId, cardIds, hint},
+      {hands}
+    );
   }
 
   playCard(cardId, actorPlayerId) {

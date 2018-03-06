@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import color from 'color';
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TouchableHighlight} from 'react-native';
 
@@ -21,8 +19,6 @@ export default class Command extends Component {
     if (loggedInPlayerId !== turnPlayerId) {
       return null;
     }
-
-    console.log(selectedHint);
 
     if (selectedCardToPlay) {
       return (
@@ -46,7 +42,9 @@ export default class Command extends Component {
         <View style={styles.commandContainer}>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => giveHint(selectedHint.cardIds, 'planet', turnPlayerId)}
+            onPress={() =>
+              giveHint(selectedHint.cardIds, 'planet', selectedHint.playerId, turnPlayerId)
+            }
           >
             <Text style={styles.buttonText}>Give Hint</Text>
           </TouchableHighlight>

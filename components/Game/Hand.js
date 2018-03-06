@@ -2,14 +2,7 @@ import _ from 'lodash';
 import color from 'color';
 import * as firebase from 'firebase';
 import React, {Component} from 'react';
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  TouchableHighlight,
-} from 'react-native';
+import {Text, View, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import SortableGrid from 'react-native-sortable-grid';
 import * as Animatable from 'react-native-animatable';
 
@@ -48,14 +41,19 @@ export default class Hand extends Component {
   }
 
   updateHandOrder({itemOrder}) {
-    const {gameId, player} = this.props;
+    const {gameId, player, hand} = this.props;
 
     const updatedHand = _.map(itemOrder, (obj) => obj.key);
+
+    const newHand = [];
+    updatedHand.forEach((orderedCardId) => {
+      newHand.push(_.find(hand, ['cardId', orderedCardId]));
+    });
 
     firebase
       .database()
       .ref(`games/${gameId}/hands/${player.id}`)
-      .set(updatedHand)
+      .set(newHand)
       .catch((error) => {
         console.log(
           `Error re-ordering hand order for logged-in player for game "${gameId}" in Firebase:`,
@@ -70,8 +68,8 @@ export default class Hand extends Component {
 
     const myTurn = player.id === turnPlayerId;
 
-    const cardsContent = _.map(hand, (cardId, i) => {
-      const {rank, planet, hint} = getCard(cardId);
+    const cardsContent = _.map(hand, ({cardId, hint}, i) => {
+      const {rank, planet} = getCard(cardId);
       let hintContent;
       if (hint === 'planet') {
         hintContent = <Image style={styles.hintIcon} source={planetIcons[planet]} />;
@@ -92,7 +90,7 @@ export default class Hand extends Component {
 
       // return (
       //   <Animatable.View
-      //     animation={this.state.selectedCardId === cardId ? 'slideInDown' : undefined}
+      //     animation={selectedCardToPlay === cardId ? 'slideInDown' : undefined}
       //     easing="ease-in-back"
       //     iterationCount="infinite"
       //     direction="alternate"
@@ -101,7 +99,7 @@ export default class Hand extends Component {
       //     key={cardId}
       //   >
       //     {hintContent}
-      //     <TouchableWithoutFeedback onPress={() => this.toggleSelect(cardId)}>
+      //     <TouchableWithoutFeedback onPress={() =>  selectCardToPlay(cardId)}>
       //       <Image style={styles.shipIcon} source={shipIcon} />
       //     </TouchableWithoutFeedback>
       //   </Animatable.View>
@@ -109,8 +107,12 @@ export default class Hand extends Component {
 
       return (
         <View key={cardId}>
-          {hintContent}
-          <Image style={styles.shipIcon} source={shipIcon} />
+          <TouchableWithoutFeedback onPress={() => selectCardToPlay(cardId)}>
+            <View>
+              {hintContent}
+              <Image style={styles.shipIcon} source={shipIcon} />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       );
     });

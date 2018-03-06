@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
-import {Text, View, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, Image, StyleSheet, TouchableHighlight} from 'react-native';
 
 import Card from './Card';
 
@@ -14,22 +14,31 @@ const avatars = {
 
 export default class Hand extends Component {
   render() {
-    const {players, hands, turnPlayerId, loggedInPlayerId, selectedHint, selectHint} = this.props;
+    const {
+      players,
+      hands,
+      turnPlayerId,
+      loggedInPlayerId,
+      selectedHint,
+      selectCardToHint,
+    } = this.props;
     const playersContent = _.map(players, (player) => {
-      console.log(player);
       if (player.id === loggedInPlayerId) {
         return;
       }
 
       const isPlayersTurn = turnPlayerId === player.id;
 
-      const cardsContent = _.map(hands[player.id], (cardId, i) => {
+      const cardsContent = _.map(hands[player.id], ({cardId, hint}, i) => {
         const {planet, rank} = getCard(cardId);
         const selected = selectedHint.cardIds.includes(cardId);
         return (
-          <TouchableWithoutFeedback onPress={() => selectHint({playerId: player.id, cardId})}>
-            <Card planet={planet} rank={rank} key={`${player.name}_${i}`} selected={selected} />
-          </TouchableWithoutFeedback>
+          <TouchableHighlight
+            key={`${player.name}_${i}`}
+            onPress={() => selectCardToHint({playerId: player.id, cardId})}
+          >
+            <Card planet={planet} rank={rank} selected={selected} hint={hint} />
+          </TouchableHighlight>
         );
       });
 
