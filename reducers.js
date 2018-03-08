@@ -126,6 +126,10 @@ const rootReducers = {
     switch (action.type) {
       case actions.SHUFFLE_DECK:
         return action.cardIds;
+      case actions.PLAY_CARD:
+      case actions.DISCARD_CARD:
+        // Remove the first card
+        return state.filter((cardId, i) => i !== 0);
       default:
         return state;
     }
@@ -139,6 +143,16 @@ const rootReducers = {
       case actions.PLAY_CARD:
       case actions.DISCARD_CARD:
         return null;
+      default:
+        return state;
+    }
+  },
+  turnsBeyondDeck: (state = 0, action) => {
+    switch (action.type) {
+      case actions.GIVE_HINT:
+      case actions.PLAY_CARD:
+      case actions.DISCARD_CARD:
+        return action.deckEmpty ? state + 1 : 0;
       default:
         return state;
     }

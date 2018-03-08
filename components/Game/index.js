@@ -13,29 +13,29 @@ import CommandContainer from '../../containers/CommandContainer';
 import earthIcon from '../../resources/img/planets/earth.png';
 
 class Game extends Component {
-  giveHint(cardIds, hint, targetPlayerId, actorPlayerId) {
+  giveHint(hintCardIds, hint, targetPlayerId, actorPlayerId) {
     const {hands, gameId} = this.props;
     const playerCardIds = hands[targetPlayerId].map((c) => c.cardId);
 
     // Make sure that the cards are actually a part of that players hand
-    if (_.difference(cardIds, playerCardIds).length !== 0) {
+    if (_.difference(hintCardIds, playerCardIds).length !== 0) {
       //TODO: if false, alert
       console.log('Invalid hint. Cards were not in the target players hand');
       return;
     }
 
     // Build an array of cards that were not selected for reference
-    const nonHintedCardIds = _.difference(playerCardIds, cardIds);
+    const nonHintedCardIds = _.difference(playerCardIds, hintCardIds);
 
     // Make sure that the hinted cards actually possess the hint property
-    if (_.uniq(cardIds.map((id) => getCard(id).planet)).length !== 1) {
+    if (_.uniq(hintCardIds.map((id) => getCard(id).planet)).length !== 1) {
       //TODO: if false, alert
       console.log('Invalid hint. The cards selected did not share the hint');
       return;
     }
 
     // Since the cards share the hint property, get the property
-    const {planet, rank} = getCard(cardIds[0]);
+    const {planet, rank} = getCard(hintCardIds[0]);
 
     // Make sure that no other cards match the rule
     nonHintedCardIds.forEach((nonHintedCardId) => {
@@ -57,7 +57,7 @@ class Game extends Component {
 
     submitTurn(
       gameId,
-      {type: actions.GIVE_HINT, actor: actorPlayerId, targetPlayerId, cardIds, hint},
+      {type: actions.GIVE_HINT, actor: actorPlayerId, targetPlayerId, hintCardIds, hint},
       {hands}
     );
   }
@@ -84,7 +84,13 @@ class Game extends Component {
     submitTurn(gameId, {type: actions.DISCARD_CARD, cardId, actor: actorPlayerId}, {hands, deck});
   }
 
-  componentWillMount() {}
+  componentWillReceiveProps(nextProps) {
+    const {history, gameOutcome} = nextProps;
+    //TODO: Move this to gamestate middleware post-reducers, or make previous player put the gameOutcome in their turn
+    if (gameOutcome) {
+      history.push('/end');
+    }
+  }
 
   render() {
     const {
@@ -98,6 +104,7 @@ class Game extends Component {
       hintsRemaining,
       crashesRemaining,
       turnIndex,
+      gameOutcome,
     } = this.props;
 
     const me = _.find(players, ['id', loggedInPlayerId]);
@@ -128,6 +135,7 @@ class Game extends Component {
         <CommandContainer
           turnPlayerId={turnPlayerId}
           loggedInPlayerId={loggedInPlayerId}
+          gameOutcome={gameOutcome}
           discardCard={this.discardCard.bind(this)}
           playCard={this.playCard.bind(this)}
           giveHint={this.giveHint.bind(this)}

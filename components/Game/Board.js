@@ -23,6 +23,7 @@ export default class Hand extends Component {
       selectCardToHint,
     } = this.props;
     const playersContent = _.map(players, (player) => {
+      // TODO: This is a hack to fake a 2 player game board for testing by mirroring your own hand
       // if (player.id === loggedInPlayerId) {
       //   return;
       // }

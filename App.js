@@ -16,6 +16,7 @@ import JoinGameContainer from './containers/JoinGameContainer';
 import ChooseNameContainer from './containers/ChooseNameContainer';
 
 import configureStore from './configureStore';
+import GameOutcomeContainer from './containers/GameOutcomeContainer';
 
 // Initialize Firebase
 try {
@@ -59,6 +60,7 @@ class App extends React.Component {
           <Route path="/name" component={ChooseNameContainer} />
           <Route path="/lobby" component={LobbyContainer} />
           <Route path="/game" component={GameContainer} />
+          <Route path="/end" component={GameOutcomeContainer} />
         </View>
       </NativeRouter>
     );
