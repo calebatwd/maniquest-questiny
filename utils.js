@@ -27,7 +27,7 @@ export const submitTurn = (gameId, turn, extraState) => {
   switch (turn.type) {
     case actions.PLAY_CARD:
     case actions.DISCARD_CARD:
-      // Remove the card being discarded
+      // Remove the card being discarded or played
       extraState.hands[turn.actor] = _.remove(
         extraState.hands[turn.actor],
         (card) => card.cardId !== turn.cardId
