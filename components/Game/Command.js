@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TouchableHighlight} from 'react-native';
+import _ from 'lodash';
 
 import colors from '../../resources/colors.json';
+import {getCard} from '../../utils';
 
 export default class Command extends Component {
   render() {
@@ -38,16 +40,32 @@ export default class Command extends Component {
         </View>
       );
     } else if (selectedHint.cardIds.length > 0) {
+      const selectedCards = selectedHint.cardIds.forEach((cId) => getCard(cId));
+      const planetHintEnabled = _.uniq(selectedCards.map((card) => card.planet)).length === 1;
+      const rankHintEnabled = _.uniq(selectedCards.map((card) => card.rank)).length === 1;
+
       return (
         <View style={styles.commandContainer}>
-          <TouchableHighlight
-            style={styles.button}
-            onPress={() =>
-              giveHint(selectedHint.cardIds, 'planet', selectedHint.playerId, turnPlayerId)
-            }
-          >
-            <Text style={styles.buttonText}>Give Hint</Text>
-          </TouchableHighlight>
+          {planetHintEnabled && (
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() =>
+                giveHint(selectedHint.cardIds, 'planet', selectedHint.playerId, turnPlayerId)
+              }
+            >
+              <Text style={styles.buttonText}>Hint Planet</Text>
+            </TouchableHighlight>
+          )}
+          {rankHintEnabled && (
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() =>
+                giveHint(selectedHint.cardIds, 'rank', selectedHint.playerId, turnPlayerId)
+              }
+            >
+              <Text style={styles.buttonText}>Hint Rank</Text>
+            </TouchableHighlight>
+          )}
         </View>
       );
     } else {

@@ -86,7 +86,7 @@ class Game extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {history, gameOutcome} = nextProps;
-    //TODO: Move this to gamestate middleware post-reducers, or make previous player put the gameOutcome in their turn
+    //TODO: Move this to gamestate middleware post-reducers
     if (gameOutcome) {
       history.push('/end');
     }
