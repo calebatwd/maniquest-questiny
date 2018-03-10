@@ -24,36 +24,24 @@ class Game extends Component {
       return;
     }
 
-    // Build an array of cards that were not selected for reference
-    const nonHintedCardIds = _.difference(playerCardIds, hintCardIds);
-
     // Make sure that the hinted cards actually possess the hint property
-    if (_.uniq(hintCardIds.map((id) => getCard(id).planet)).length !== 1) {
+    if (_.uniq(hintCardIds.map((id) => getCard(id)[hint])).length !== 1) {
       //TODO: if false, alert
       console.log('Invalid hint. The cards selected did not share the hint');
       return;
     }
 
     // Since the cards share the hint property, get the property
-    const {planet, rank} = getCard(hintCardIds[0]);
+    const targetHintValue = getCard(hintCardIds[0])[hint];
 
     // Make sure that no other cards match the rule
-    nonHintedCardIds.forEach((nonHintedCardId) => {
-      const nonHintedCard = getCard(nonHintedCardId);
-      if (hint === 'planet' && nonHintedCard.planet === planet) {
-        //TODO: if false, alert
-        console.log(
-          'Invalid hint. Other cards in the players hand also contain the selected planet hint'
-        );
-        return;
-      } else if (hint === 'rank' && nonHintedCard.rank === rank) {
-        //TODO: if false, alert
-        console.log(
-          'Invalid hint. Other cards in the players hand also contain the selected rank hint'
-        );
-        return;
-      }
-    });
+    const nonHintedCardIds = _.difference(playerCardIds, hintCardIds);
+    const otherCardHintValues = nonHintedCardIds.map((id) => getCard(id)[hint]);
+    if (otherCardHintValues.includes(targetHintValue)) {
+      //TODO: if false, alert
+      console.log('Invalid hint. Other cards in the players hand also contain the selected hint');
+      return;
+    }
 
     submitTurn(
       gameId,
