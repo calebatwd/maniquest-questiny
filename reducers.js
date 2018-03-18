@@ -19,7 +19,7 @@ const initialScores = {
   mercury: 0,
 };
 
-const rootReducers = {
+const appReducers = {
   gameId: (state = null, action) => {
     switch (action.type) {
       case actions.SET_GAME_ID:
@@ -188,4 +188,15 @@ const rootReducers = {
   },
 };
 
-export default combineReducers({...rootReducers});
+const appReducer = combineReducers({...appReducers});
+
+const rootReducer = (state, action) => {
+  // This reducer will reset the entire game state, otherwise, pass to the appReducers
+  if (action.type === actions.RESET_GAME) {
+    state = undefined;
+  }
+
+  return appReducer(state, action);
+};
+
+export default rootReducer;

@@ -4,6 +4,7 @@ export const SET_GAME_ID = 'SET_GAME_ID';
 export const FETCH_PLAYERS = 'FETCH_PLAYERS';
 export const UPDATE_PLAYERS = 'UPDATE_PLAYERS';
 export const SET_LOGGED_IN_PLAYER_ID = 'SET_LOGGED_IN_PLAYER_ID';
+export const RESET_GAME = 'RESET_GAME';
 
 export const GIVE_HINT = 'GIVE_HINT';
 export const DISCARD_CARD = 'DISCARD_CARD';
@@ -17,6 +18,12 @@ export function setGameId(gameId) {
   return {
     type: SET_GAME_ID,
     gameId,
+  };
+}
+
+export function resetGame() {
+  return {
+    type: RESET_GAME,
   };
 }
 

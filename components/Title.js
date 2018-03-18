@@ -5,6 +5,11 @@ import {Link} from 'react-router-native';
 import colors from '../resources/colors.json';
 
 export default class Title extends React.Component {
+  componentWillMount() {
+    const {resetGame} = this.props;
+    resetGame();
+  }
+
   render() {
     return (
       <View style={styles.container}>
