@@ -40,7 +40,7 @@ export default class Command extends Component {
         </View>
       );
     } else if (selectedHint.cardIds.length > 0) {
-      const selectedCards = selectedHint.cardIds.forEach((cId) => getCard(cId));
+      const selectedCards = selectedHint.cardIds.map((cId) => getCard(cId));
       const planetHintEnabled = _.uniq(selectedCards.map((card) => card.planet)).length === 1;
       const rankHintEnabled = _.uniq(selectedCards.map((card) => card.rank)).length === 1;
 
