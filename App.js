@@ -21,6 +21,8 @@ import GameOutcomeContainer from './containers/GameOutcomeContainer';
 try {
   const firebaseConfig = {
     databaseURL: 'https://maniquest-questiny.firebaseio.com/',
+    authDomain: 'maniquest-questiny.firebaseapp.com',
+    apiKey: 'AIzaSyBFHOr5LKNirHqMyWTvpml0MZxVH3-lYD8',
   };
   firebase.initializeApp(firebaseConfig);
 } catch (error) {

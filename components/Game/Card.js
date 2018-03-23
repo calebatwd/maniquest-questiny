@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
     shadowOffset: {height: 0, width: 0},
   },
   saturnIcon: {
-    width: 98,
-    height: 98,
+    width: 68,
+    height: 68,
   },
   shipIcon: {
     width: 44,

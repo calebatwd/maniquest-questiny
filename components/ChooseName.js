@@ -21,7 +21,7 @@ class ChooseName extends Component {
   }
 
   addPlayer() {
-    const {history, setLoggedInPlayerId, gameId} = this.props;
+    const {history, gameId, loggedInPlayerId} = this.props;
     const {playerName} = this.state;
 
     if (playerName === '') {
@@ -30,13 +30,12 @@ class ChooseName extends Component {
     } else {
       firebase
         .database()
-        .ref(`games/${gameId}/players`)
-        .push({
+        .ref(`games/${gameId}/players/${loggedInPlayerId}`)
+        .set({
           name: playerName.trim(),
           avatar: 'spaceman',
         })
         .then((snapshot) => {
-          setLoggedInPlayerId(snapshot.key);
           history.push('/lobby');
         })
         .catch((error) => {

@@ -117,7 +117,7 @@ export default class Hand extends Component {
         <Animatable.View
           animation={isCardSelected ? shipBounceAnimation : undefined}
           delay={0}
-          duration={2000}
+          duration={1000}
           direction="alternate"
           easing="ease-in-out"
           iterationCount="infinite"

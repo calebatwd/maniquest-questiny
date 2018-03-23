@@ -4,7 +4,7 @@ import ChooseName from '../components/ChooseName';
 
 import {setLoggedInPlayerId} from '../actions';
 
-const mapStateToProps = ({gameId}) => ({gameId});
+const mapStateToProps = ({gameId, loggedInPlayerId}) => ({gameId, loggedInPlayerId});
 
 const mapDispatchToProps = (dispatch) => ({
   setLoggedInPlayerId: (loggedInPlayerId) => dispatch(setLoggedInPlayerId(loggedInPlayerId)),
