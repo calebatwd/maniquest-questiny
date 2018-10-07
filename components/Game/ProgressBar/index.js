@@ -14,7 +14,7 @@ export default ({deck, scores, discardedCards, hintsRemaining, crashesRemaining}
       <HintCounter hintsRemaining={hintsRemaining} />
       <CrashCounter crashesRemaining={crashesRemaining} />
     </View>
-    <Score scores={scores} />
+    <Score scores={scores} discardedCards={discardedCards} />
     <Deck deck={deck} />
   </View>
 );

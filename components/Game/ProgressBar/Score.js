@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, View, Image, StyleSheet} from 'react-native';
+import {Text, View, Image, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import Discards from './Discards';
 
 import marsIcon from '../../../resources/img/planets/mars.png';
 import venusIcon from '../../../resources/img/planets/venus.png';
@@ -17,36 +18,61 @@ const planetIcons = {
   mercury: mercuryIcon,
 };
 
-const PlanetScore = ({name, score}) => {
+const PlanetScore = ({name, score, discards, showDiscards}) => {
   const planetIconStyles = [styles.planetIcon];
   if (name === 'saturn') {
     planetIconStyles.push(styles.saturnIcon);
   }
 
   return (
-    <View style={styles.planetContainer}>
-      <Image style={planetIconStyles} source={planetIcons[name]} />
-      <Text style={styles.planetText}>{score}</Text>
+    <View style={styles.planetInformation}>
+      <View style={styles.planetContainer}>
+        <Image style={planetIconStyles} source={planetIcons[name]} />
+        <Text style={styles.planetText}>{score}</Text>
+      </View>
+      {showDiscards &&
+      <Discards discards={discards}/>
+      }
     </View>
   );
 };
 
-export default ({scores}) => (
-  <View style={styles.planetsContainer}>
-    <PlanetScore name="mars" score={scores.mars} />
-    <PlanetScore name="venus" score={scores.venus} />
-    <PlanetScore name="saturn" score={scores.saturn} />
-    <PlanetScore name="jupiter" score={scores.jupiter} />
-    <PlanetScore name="mercury" score={scores.mercury} />
-  </View>
-);
+export default class Score extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {showDiscards: false}
+  }
+
+  toggleDiscards = () => this.setState({ showDiscards: !this.state.showDiscards })
+
+  render(){
+    const {scores, discardedCards} = this.props;
+    return (
+      <TouchableWithoutFeedback style={styles.scoreHightlight} onPress={this.toggleDiscards} >
+        <View style={styles.planetsContainer}>
+          <PlanetScore name="mars" score={scores.mars} discards={discardedCards.mars} showDiscards={this.state.showDiscards}/>
+          <PlanetScore name="venus" score={scores.venus} discards={discardedCards.venus} showDiscards={this.state.showDiscards}/>
+          <PlanetScore name="saturn" score={scores.saturn} discards={discardedCards.saturn} showDiscards={this.state.showDiscards}/>
+          <PlanetScore name="jupiter" score={scores.jupiter} discards={discardedCards.jupiter} showDiscards={this.state.showDiscards}/>
+          <PlanetScore name="mercury" score={scores.mercury} discards={discardedCards.mercury} showDiscards={this.state.showDiscards}/>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  planetsContainer: {
+  scoreHightlight:{
     flex: 1,
     marginRight: 12,
+  },
+  planetsContainer: {
+    flex: 1,
     flexDirection: 'row',
     borderColor: 'blue',
+  },
+  planetInformation:{
+    flex: 1
   },
   planetContainer: {
     flex: 1,
